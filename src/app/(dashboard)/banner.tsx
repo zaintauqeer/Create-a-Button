@@ -12,19 +12,8 @@ export const Banner = () => {
   const mutation = useCreateProject();
 
   const onClick = () => {
-    mutation.mutate(
-      {
-        name: "Untitled project",
-        json: "",
-        width: 900,
-        height: 1200,
-      },
-      {
-        onSuccess: ({ data }) => {
-          router.push(`/editor/${data.id}`);
-        },
-      },
-    );
+    router.push(`/editor`);
+
   };
 
   return (
@@ -47,7 +36,7 @@ export const Banner = () => {
           variant="secondary"
           className="w-[160px]"
         >
-          Start creating
+          Start Designing
           <ArrowRight className="size-4 ml-2" />
         </Button>
       </div>

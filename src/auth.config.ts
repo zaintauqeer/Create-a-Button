@@ -28,6 +28,28 @@ declare module "@auth/core/jwt" {
   }
 }
 
+type User = {
+  id: string;
+  status: string;
+  message: string;
+  data: {
+    user: {
+      _id: string;
+      email: string;
+      isGoogleSignUp: boolean;
+      role: string;
+      name: string;
+      status: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+      confirmationToken: string;
+      confirmationTokenExpires: string;
+    };
+    token: string;
+  };
+};
+
 export default {
   adapter: DrizzleAdapter(db),
   providers: [
@@ -45,27 +67,52 @@ export default {
 
         const { email, password } = validatedFields.data;
 
-        const query = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, email));
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/user/login`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
+          });
 
-        const user = query[0];
+          if (!response.ok) {
+            console.error(`HTTP error! status: ${response.status}`);
+            return null;
+          }
 
-        if (!user || !user.password) {
+          const result: User = await response.json();
+
+          if (result.message === "Successfully logged in") {
+            return result?.data.user;
+          } else {
+            console.error('Login failed:', result.message);
+            return null;
+          }
+        } catch (error) {
+          console.error('Fetch error:', error);
           return null;
         }
+        // const query = await db
+        //   .select()
+        //   .from(users)
+        //   .where(eq(users.email, email));
 
-        const passwordsMatch = await bcrypt.compare(
-          password,
-          user.password,
-        );
+        // const user = query[0];
 
-        if (!passwordsMatch) {
-          return null;
-        }
+        // if (!user || !user.password) {
+        //   return null;
+        // }
 
-        return user;
+        // const passwordsMatch = await bcrypt.compare(
+        //   password,
+        //   user.password,
+        // );
+
+        // if (!passwordsMatch) {
+        //   return null;
+        // }
+
       },
     }), 
     GitHub, 

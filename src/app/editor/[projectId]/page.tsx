@@ -17,11 +17,25 @@ interface EditorProjectIdPageProps {
 const EditorProjectIdPage = ({
   params,
 }: EditorProjectIdPageProps) => {
-  const { 
-    data, 
-    isLoading, 
+  const {
+    data,
+    isLoading,
     isError
   } = useGetProject(params.projectId);
+
+  const data2 = {
+    "id": "91f8bf4f-847e-4a1e-a918-ec3518512ca9",
+    "name": "Untitled project",
+    "userId": "ef2cde80-df97-4b0c-b9c4-91efae72af53",
+    "json":"",
+    "height": 1200,
+    "width": 900,
+    "thumbnailUrl": null,
+    "isTemplate": null,
+    "isPro": null,
+    "createdAt": "2024-11-26T04:58:53.031Z",
+    "updatedAt": "2024-11-27T05:25:05.526Z"
+}
 
   if (isLoading || !data) {
     return (
@@ -47,7 +61,7 @@ const EditorProjectIdPage = ({
     );
   }
 
-  return <Editor initialData={data} />
+  return <Editor initialData={data2} />
 };
- 
+
 export default EditorProjectIdPage;
