@@ -1,4 +1,3 @@
 node_modules
 .next
-.env
-.ev.local
+.env*.local
