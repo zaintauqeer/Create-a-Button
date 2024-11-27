@@ -51,7 +51,7 @@ type User = {
 };
 
 export default {
-  adapter: DrizzleAdapter(db),
+  // adapter: DrizzleAdapter(db),
   providers: [
     Credentials({
       credentials: {
