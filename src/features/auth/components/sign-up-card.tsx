@@ -31,24 +31,42 @@ export const SignUpCard = () => {
     signIn(provider, { callbackUrl: "/" });
   };
 
-  const onCredentialSignUp = (
+  const onCredentialSignUp = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-    
-    mutation.mutate({
-      name,
-      email,
-      password
-    }, {
-      onSuccess: () => {
-        signIn("credentials", {
-          email,
-          password,
-          callbackUrl: "/",
-        });
-      },
-    })
+    try {
+      const Data = {
+        name,
+        email,
+        password
+      }
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/user/signup`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Data)
+      })
+      const result = await response.json();
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+    }
+
+    // mutation.mutate({
+    //   name,
+    //   email,
+    //   password
+    // }, {
+    //   onSuccess: () => {
+    //     signIn("credentials", {
+    //       email,
+    //       password,
+    //       callbackUrl: "/",
+    //     });
+    //   },
+    // })
   };
 
   return (
@@ -95,10 +113,10 @@ export const SignUpCard = () => {
             minLength={3}
             maxLength={20}
           />
-          <Button 
-            disabled={mutation.isPending} 
-            type="submit" 
-            className="w-full" 
+          <Button
+            disabled={mutation.isPending}
+            type="submit"
+            className="w-full"
             size="lg"
           >
             Continue
