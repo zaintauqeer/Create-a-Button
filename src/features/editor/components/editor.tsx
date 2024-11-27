@@ -110,7 +110,7 @@ export const Editor = ({ initialData }: EditorProps) => {
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
       />
-      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
+      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex lg:flex-row flex-col-reverse">
         <Sidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
@@ -185,7 +185,7 @@ export const Editor = ({ initialData }: EditorProps) => {
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
         />
-        <main className="bg-muted flex-1 overflow-auto relative flex flex-col">
+        <main className="bg-muted flex-1 overflow-auto relative flex lg:flex-col flex-col-reverse">
           <Toolbar
             editor={editor}
             activeTool={activeTool}

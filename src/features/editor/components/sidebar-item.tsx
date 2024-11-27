@@ -21,7 +21,7 @@ export const SidebarItem = ({
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "w-full h-full aspect-video p-3 py-4 flex flex-col rounded-none",
+        "lg:w-full lg:h-full w-52 h-20 lg:aspect-video p-3 py-4 flex flex-col rounded-none",
         isActive && "bg-muted text-primary"
       )}
     >

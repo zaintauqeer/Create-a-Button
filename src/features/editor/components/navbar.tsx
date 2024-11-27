@@ -70,10 +70,10 @@ export const Navbar = ({
   });
 
   return (
-    <nav className="w-full flex items-center p-4 h-[68px] gap-x-8 border-b lg:pl-[34px]">
+    <nav className="w-full flex items-center p-4 h-[68px] gap-x-7 border-b lg:pl-[34px]">
       <Logo />
       <div className="w-full flex items-center gap-x-1 h-full">
-        <DropdownMenu modal={false}>
+        {/* <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="ghost">
               File
@@ -94,7 +94,7 @@ export const Navbar = ({
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
         <Separator orientation="vertical" className="mx-2" />
         <Hint label="Select" side="bottom" sideOffset={10}>
           <Button
@@ -127,7 +127,7 @@ export const Navbar = ({
           </Button>
         </Hint>
         <Separator orientation="vertical" className="mx-2" />
-        {isPending && ( 
+        {/* {isPending && ( 
           <div className="flex items-center gap-x-2">
             <Loader className="size-4 animate-spin text-muted-foreground" />
             <div className="text-xs text-muted-foreground">
@@ -150,7 +150,7 @@ export const Navbar = ({
               Saved
             </div>
           </div>
-        )}
+        )} */}
         <div className="ml-auto flex items-center gap-x-4">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
