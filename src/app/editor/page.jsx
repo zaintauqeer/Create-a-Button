@@ -4,7 +4,7 @@ import { Editor } from "@/features/editor/components/editor";
 export default function EditorPage() {
     const data = {
         "id": "",
-        "name": "",
+        "name": "Test",
         "json":"",
         "height": 1200,
         "width": 900,

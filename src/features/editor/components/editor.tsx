@@ -64,7 +64,7 @@ export const Editor = ({ initialData }: EditorProps) => {
     defaultWidth: initialData.width,
     defaultHeight: initialData.height,
     clearSelectionCallback: onClearSelection,
-    saveCallback: debouncedSave,
+    // saveCallback: debouncedSave,
   });
 
   const onChangeActiveTool = useCallback((tool: ActiveTool) => {
@@ -110,7 +110,7 @@ export const Editor = ({ initialData }: EditorProps) => {
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
       />
-      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex lg:flex-row flex-col-reverse">
+      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
         <Sidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
@@ -185,7 +185,7 @@ export const Editor = ({ initialData }: EditorProps) => {
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
         />
-        <main className="bg-muted flex-1 overflow-auto relative flex lg:flex-col flex-col-reverse">
+        <main className="bg-muted flex-1 overflow-auto relative flex flex-col">
           <Toolbar
             editor={editor}
             activeTool={activeTool}
