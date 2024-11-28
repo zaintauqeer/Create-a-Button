@@ -13,12 +13,10 @@ export const Logo = () => {
   return (
     <Link href="/">
       <div className="flex items-center gap-x-2 hover:opacity-75 transition h-[68px] px-4">
-        <div className="size-8 relative">
-          <Image src="/icon.jpg" alt="Image AI" fill />
+        <div className="relative">
+          <Image className="static" src="/logo.png" alt="Image AI" width={150} height={80} />
         </div>
-        <h1 className={cn(font.className, "text-xl font-bold")}>
-          Image AI
-        </h1>
+        
       </div>
     </Link>
   );
