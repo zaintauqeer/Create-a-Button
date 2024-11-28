@@ -24,7 +24,7 @@ export default async function Home() {
                 </div>
                 <h1 className='relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-gray-900 text-5xl md:text-6xl lg:text-7xl'>
                   Your Image on a
-                  <span className='bg-sky-700 px-2 text-white'>Custom</span>
+                  <span className='bg-primary px-2 text-white'>Custom</span>
                   Button
                 </h1>
                 <p className='mt-8 text-lg lg:pr-10 max-w-prose text-center lg:text-left text-balance md:text-wrap'>
@@ -34,21 +34,21 @@ export default async function Home() {
                 <ul className='my-8 space-y-2 text-left font-medium flex flex-col items-center sm:items-start'>
                   <div className='space-y-2'>
                     <li className='flex gap-1.5 items-center text-left'>
-                      <Check className='h-5 w-5 shrink-0 text-sky-700' />
+                      <Check className='h-5 w-5 shrink-0 text-primary' />
                       High-quality, durable material
                     </li>
                     <li className='flex gap-1.5 items-center text-left'>
-                      <Check className='h-5 w-5 shrink-0 text-sky-700' />
+                      <Check className='h-5 w-5 shrink-0 text-primary' />
                       5-year design guarantee
                     </li>
                     <li className='flex gap-1.5 items-center text-left'>
-                      <Check className='h-5 w-5 shrink-0 text-sky-700' />
+                      <Check className='h-5 w-5 shrink-0 text-primary' />
                       Available in various sizes and styles
                     </li>
                   </div>
                 </ul>
                 <Link
-                    href='/create'
+                    href='/editor'
                     className={buttonVariants({
                         size: 'lg',
                         className: 'flex items-center gap-1 text-xl',
@@ -87,11 +87,11 @@ export default async function Home() {
 
                   <div className='flex flex-col justify-between items-center sm:items-start'>
                     <div className='flex gap-0.5'>
-                      <Star className='h-4 w-4 text-sky-700 fill-sky-700' />
-                      <Star className='h-4 w-4 text-sky-700 fill-sky-700' />
-                      <Star className='h-4 w-4 text-sky-700 fill-sky-700' />
-                      <Star className='h-4 w-4 text-sky-700 fill-sky-700' />
-                      <Star className='h-4 w-4 text-sky-700 fill-sky-700' />
+                      <Star className='h-4 w-4 text-primary fill-primary' />
+                      <Star className='h-4 w-4 text-primary fill-primary' />
+                      <Star className='h-4 w-4 text-primary fill-primary' />
+                      <Star className='h-4 w-4 text-primary fill-primary' />
+                      <Star className='h-4 w-4 text-primary fill-primary' />
                     </div>
 
                     <p>
