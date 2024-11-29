@@ -26,7 +26,66 @@ export const ImageSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: ImageSidebarProps) => {
-  const { data, isLoading, isError } = useGetImages();
+  // const { isLoading, isError } = useGetImages();
+
+  const data = [
+    {
+      id: "1",
+      urls: {
+        regular: "/testimonials/1.jpg",
+        small: "/testimonials/1.jpg",
+      },
+      alt_description: "Image",
+      user: {
+        name: "Unsplash",
+      },
+    },
+    {
+      id: "2",
+      urls: {
+        regular: "/testimonials/2.jpg",
+        small: "/testimonials/2.jpg",
+      },
+      alt_description: "Image",
+      user: {
+        name: "Unsplash",
+      },
+    },
+    {
+      id: "3",
+      urls: {
+        regular: "/testimonials/3.jpg",
+        small: "/testimonials/3.jpg",
+      },
+      alt_description: "Image",
+      user: {
+        name: "Unsplash",
+      },
+    },
+    {
+      id: "4",
+      urls: {
+        regular: "/testimonials/4.jpg",
+        small: "/testimonials/4.jpg",
+      },
+      alt_description: "Image",
+      user: {
+        name: "Unsplash",
+      },
+    },
+    {
+      id: "5",
+      urls: {
+        regular: "/testimonials/5.jpg",
+        small: "/testimonials/5.jpg",
+      },
+      alt_description: "Image",
+      user: {
+        name: "Unsplash",
+      },
+    },
+  
+  ]
 
   const onClose = () => {
     onChangeActiveTool("select");
@@ -58,7 +117,7 @@ export const ImageSidebar = ({
           }}
         />
       </div>
-      {isLoading && (
+      {/* {isLoading && (
         <div className="flex items-center justify-center flex-1">
           <Loader className="size-4 text-muted-foreground animate-spin" />
         </div>
@@ -70,7 +129,7 @@ export const ImageSidebar = ({
             Failed to fetch images
           </p>
         </div>
-      )}
+      )} */}
       <ScrollArea>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
@@ -89,7 +148,7 @@ export const ImageSidebar = ({
                   />
                   <Link
                     target="_blank"
-                    href={image.links.html}
+                    href='#'
                     className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white hover:underline p-1 bg-black/50 text-left"
                   >
                     {image.user.name}
