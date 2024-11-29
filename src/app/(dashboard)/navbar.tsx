@@ -15,7 +15,7 @@ export const Navbar = () => {
               <Logo />
               <div className='h-full flex items-center space-x-4'>
                 <Link
-                  href='/signup'
+                  href='/sign-up'
                   className={buttonVariants({
                       size: 'sm',
                       variant: 'ghost',
@@ -23,7 +23,7 @@ export const Navbar = () => {
                   Sign up
                 </Link>
                 <Link
-                  href='/signin'
+                  href='/sign-in'
                   className={buttonVariants({
                       size: 'sm',
                       variant: 'ghost',
