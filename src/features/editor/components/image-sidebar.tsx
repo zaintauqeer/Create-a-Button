@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AlertTriangle, Loader, Upload } from "lucide-react";
+import { buttonVariants } from '@/components/ui/button'
 
 import { 
   ActiveTool, 
@@ -14,12 +15,26 @@ import { useGetImages } from "@/features/images/api/use-get-images";
 import { cn } from "@/lib/utils";
 import { UploadButton } from "@/lib/uploadthing";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useState } from "react";
+
 
 interface ImageSidebarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
+
+interface ImageData {
+  id: string;
+  urls: {
+    regular: string;
+    small: string;
+  };
+  alt_description: string;
+  user: {
+    name: string;
+  };
+}
 
 export const ImageSidebar = ({
   editor,
@@ -28,7 +43,12 @@ export const ImageSidebar = ({
 }: ImageSidebarProps) => {
   // const { isLoading, isError } = useGetImages();
 
-  const data = [
+
+  const onClose = () => {
+    onChangeActiveTool("select");
+  };
+
+  const [data, setData] = useState<ImageData[]>([
     {
       id: "1",
       urls: {
@@ -84,11 +104,24 @@ export const ImageSidebar = ({
         name: "Unsplash",
       },
     },
-  
-  ]
+  ]);
 
-  const onClose = () => {
-    onChangeActiveTool("select");
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const newImage: ImageData = {
+        id: (data.length + 1).toString(),
+        urls: {
+          regular: URL.createObjectURL(file),
+          small: URL.createObjectURL(file),
+        },
+        alt_description: "Uploaded Image",
+        user: {
+          name: "User",
+        },
+      };
+      setData([...data, newImage]);
+    }
   };
 
   return (
@@ -103,7 +136,7 @@ export const ImageSidebar = ({
         description="Add images to your canvas"
       />
       <div className="p-4 border-b">
-        <UploadButton
+        {/* <UploadButton
           appearance={{
             button: "w-full text-sm font-medium",
             allowedContent: "hidden"
@@ -115,7 +148,17 @@ export const ImageSidebar = ({
           onClientUploadComplete={(res) => {
             editor?.addImage(res[0].url);
           }}
-        />
+        /> */} 
+
+      <label htmlFor="upload"
+        className={buttonVariants({
+            size: 'sm',
+            className: 'w-full flex items-center gap-1 cursor-pointer',
+        })}>
+        Upload Image
+        <input id="upload" name="upload-img" type="file" hidden onChange={handleFileChange} />
+      </label>
+
       </div>
       {/* {isLoading && (
         <div className="flex items-center justify-center flex-1">

@@ -741,9 +741,16 @@ export const useEditor = ({
         cornerStrokeColor: "#3b82f6",
       });
 
-      const initialWorkspace = new fabric.Rect({
-        width: initialWidth.current,
-        height: initialHeight.current,
+
+      const radius = Math.min(
+        initialContainer.offsetWidth,
+        initialContainer.offsetHeight
+      ) / 2;
+
+      const initialWorkspace = new fabric.Circle({
+        radius,
+        left: initialCanvas.width! / 2 - radius,
+        top: initialCanvas.height! / 2 - radius,
         name: "clip",
         fill: "white",
         selectable: false,
