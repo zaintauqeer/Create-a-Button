@@ -99,6 +99,16 @@ const buildEditor = ({
     autoZoom();
   };
 
+  const savePreview = () => {
+    const options = generateSaveOptions();
+
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const dataUrl = canvas.toDataURL(options);
+    localStorage.setItem("previewImage", dataUrl);
+    // downloadFile(dataUrl, "jpg");
+    // autoZoom();
+  };
+
   const saveJson = async () => {
     const dataUrl = canvas.toJSON(JSON_KEYS);
 
@@ -140,6 +150,7 @@ const buildEditor = ({
   };
 
   return {
+    savePreview,
     savePng,
     saveJpg,
     saveSvg,

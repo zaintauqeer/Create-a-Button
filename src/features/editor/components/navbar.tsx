@@ -6,12 +6,14 @@ import { useFilePicker } from "use-file-picker";
 import { useMutationState } from "@tanstack/react-query";
 import { 
   ChevronDown, 
-  Download, 
+  Download,
   Loader, 
   MousePointerClick, 
   Redo2, 
   Undo2
 } from "lucide-react";
+
+import Link from "next/link";
 
 import { UserButton } from "@/features/auth/components/user-button";
 
@@ -22,6 +24,8 @@ import { cn } from "@/lib/utils";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
+
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -42,6 +46,7 @@ export const Navbar = ({
   activeTool,
   onChangeActiveTool,
 }: NavbarProps) => {
+  const router = useRouter();
   const data = useMutationState({
     filters: {
       mutationKey: ["project", { id }],
@@ -68,6 +73,14 @@ export const Navbar = ({
       }
     },
   });
+
+  const handleAddToCart = () => {
+    if (editor) {
+      // Export the image as a data URL (base64)
+      editor?.savePreview();
+      router.push("/editor/preview");
+    }
+  };
 
   return (
     <nav className="w-full flex items-center p-4 h-[68px] gap-x-7 border-b lg:pl-[34px]">
@@ -160,7 +173,7 @@ export const Navbar = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-60">
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 className="flex items-center gap-x-2"
                 onClick={() => editor?.saveJson()}
               >
@@ -171,7 +184,7 @@ export const Navbar = ({
                     Save for later editing
                   </p>
                 </div>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 className="flex items-center gap-x-2"
                 onClick={() => editor?.savePng()}
@@ -208,8 +221,12 @@ export const Navbar = ({
                   </p>
                 </div>
               </DropdownMenuItem>
+          
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button onClick={handleAddToCart}>
+                Add to cart
+          </Button>
           <UserButton />
         </div>
       </div>
