@@ -61,30 +61,30 @@ export default function CheckoutPage() {
 		}
 	};
 
-	const createPayPalOrder = async () => {
-		try {
-			const response = await fetch('/api/create-paypal-order', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					formData,
-					items: [
-						{
-							price: 12.00, // Your product price
-							quantity: 1,
-						}
-					],
-				}),
-			});
+	// const createPayPalOrder = async () => {
+	// 	try {
+	// 		const response = await fetch('/api/create-paypal-order', {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: JSON.stringify({
+	// 				formData,
+	// 				items: [
+	// 					{
+	// 						price: 12.00, // Your product price
+	// 						quantity: 1,
+	// 					}
+	// 				],
+	// 			}),
+	// 		});
 
-			const { approvalUrl } = await response.json();
-			window.location.href = approvalUrl; // Redirect to PayPal
-		} catch (error) {
-			console.error('Error creating PayPal order:', error);
-		}
-	};
+	// 		const { approvalUrl } = await response.json();
+	// 		window.location.href = approvalUrl; // Redirect to PayPal
+	// 	} catch (error) {
+	// 		console.error('Error creating PayPal order:', error);
+	// 	}
+	// };
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -244,7 +244,7 @@ export default function CheckoutPage() {
 								</div>
 
 
-								<div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 dark:border-gray-700 dark:bg-gray-800">
+								{/* <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 dark:border-gray-700 dark:bg-gray-800">
 									<div className="flex items-start">
 										<div className="flex h-5 items-center">
 											<input id="paypal-2" aria-describedby="paypal-text" type="radio" name="payment-method" value="paypal" className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600"
@@ -259,7 +259,7 @@ export default function CheckoutPage() {
 									</div>
 
 
-								</div>
+								</div> */}
 							</div>
 						</div>
 
