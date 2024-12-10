@@ -31,7 +31,9 @@ export default function CheckoutPage() {
 	const [paymentMethod, setPaymentMethod] = useState('credit-card');
 	const [isLoading, setIsLoading] = useState(false);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleInputChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+	) => {
 		const { id, value } = e.target;
 		setFormData({ ...formData, [id]: value });
 	};
