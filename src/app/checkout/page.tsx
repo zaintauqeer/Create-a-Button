@@ -3,6 +3,17 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
+interface FormErrors {
+	guestEmail?: string;
+	firstName?: string;
+	lastName?: string;
+	address?: string;
+	city?: string;
+	country?: string;
+	phone?: string;
+	zipCode?: string;
+}
+
 export default function CheckoutPage() {
 
 	const [formData, setFormData] = useState({
@@ -16,7 +27,7 @@ export default function CheckoutPage() {
 		zipCode: '',
 	});
 
-	const [errors, setErrors] = useState({});
+	const [errors, setErrors] = useState<FormErrors>({});
 	const [paymentMethod, setPaymentMethod] = useState('credit-card');
 	const [isLoading, setIsLoading] = useState(false);
 
