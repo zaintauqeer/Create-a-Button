@@ -93,9 +93,10 @@ export default function CheckoutPage() {
 			try {
 				if (paymentMethod === 'credit-card') {
 					await createStripeCheckoutSession();
-				} else if (paymentMethod === 'paypal') {
-					await createPayPalOrder();
-				}
+				} 
+				// else if (paymentMethod === 'paypal') {
+				// 	await createPayPalOrder();
+				// }
 			} catch (error) {
 				console.error('Payment error:', error);
 			} finally {
