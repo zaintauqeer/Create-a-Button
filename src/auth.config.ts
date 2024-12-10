@@ -115,7 +115,7 @@ export default {
 
       },
     }), 
-    Google
+    // Google
   ],
   pages: {
     signIn: "/sign-in",
