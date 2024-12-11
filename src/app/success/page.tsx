@@ -23,7 +23,7 @@ export default function SuccessPage() {
         console.log(formData);
     
         // Send data to your backend API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/addOrder`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

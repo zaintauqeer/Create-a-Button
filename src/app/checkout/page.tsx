@@ -50,7 +50,7 @@ export default function CheckoutPage() {
 
 	const createStripeCheckoutSession = async () => {
 		try {
-			const response = await fetch('/api/create-stripe-session', {
+			const response = await fetch('api/create-stripe-session', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
