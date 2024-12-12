@@ -17,19 +17,29 @@ export default function SuccessPage() {
       }
 
       console.log(sessionId);
+      const image = localStorage.getItem("previewImage");
+      console.log(image);
 
       try {
         const formData = JSON.parse(decodeURIComponent(encodedData));
         console.log(formData);
     
         // Send data to your backend API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`, {
+        const response = await fetch(`https://zoelit-backend.vercel.app/api/order/addOrder`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             sessionId,
+            cart:[{
+              _id:sessionId,
+              quantity:1,
+              price:totalAmount,
+              originalPrice:totalAmount,
+              status:"active",
+              image:image
+            }],
             name: formData.firstName + ' ' + formData.lastName,
             email: formData.guestEmail,
             contact: formData.phone,

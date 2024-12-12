@@ -1,6 +1,7 @@
 import { Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 import { AuthConfig, initAuthConfig } from "@hono/auth-js";
+import { NextResponse } from 'next/server';
 
 import ai from "./ai";
 import users from "./users";
@@ -29,6 +30,18 @@ const routes = app
   .route("/images", images)
   .route("/projects", projects)
   .route("/subscriptions", subscriptions);
+
+// Add this cors configuration
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*', // Or specify your exact domain
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Add OPTIONS handler for preflight requests
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
 export const GET = handle(app);
 export const POST = handle(app);

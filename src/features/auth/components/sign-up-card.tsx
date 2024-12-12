@@ -41,7 +41,7 @@ export const SignUpCard = () => {
         email,
         password
       }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/user/signup`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/signup`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
