@@ -10,22 +10,21 @@ export default function SuccessPage() {
     const handleSuccess = async () => {
       const sessionId = searchParams.get('session_id');
       const encodedData = searchParams.get('data');
-      const totalAmount = searchParams.get('totalAmount');
+      const totalAmount = parseInt(searchParams.get('totalAmount') || '0');
       if (!sessionId || !encodedData) {
         console.error('Missing session ID or form data');
         return;
       }
 
-      console.log(sessionId);
       const image = localStorage.getItem("previewImage");
-      console.log(image);
 
       try {
         const formData = JSON.parse(decodeURIComponent(encodedData));
-        console.log(formData);
+
+        console.log(formData.firstName + ' ' + formData.lastName)
     
         // Send data to your backend API
-        const response = await fetch(`https://cors-anywhere.herokuapp.com/corsdemo/${process.env.NEXT_PUBLIC_API_URL}/api/order/addOrder`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/addOrder`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -33,13 +32,12 @@ export default function SuccessPage() {
           body: JSON.stringify({
             sessionId,
             cart:[{
-              _id:sessionId,
-              quantity:1,
+              orderQuantity:1,
               price:totalAmount,
               originalPrice:totalAmount,
               status:"active",
-              image:image
             }],
+           
             name: formData.firstName + ' ' + formData.lastName,
             email: formData.guestEmail,
             contact: formData.phone,
