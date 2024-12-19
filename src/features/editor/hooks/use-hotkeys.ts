@@ -21,13 +21,14 @@ export const useHotkeys = ({
   useEvent("keydown", (event) => {
     const isCtrlKey = event.ctrlKey || event.metaKey;
     const isBackspace = event.key === "Backspace";
+    const isDelete = event.key === "Delete";
     const isInput = ["INPUT", "TEXTAREA"].includes(
       (event.target as HTMLElement).tagName,
     );
 
     if (isInput) return;
 
-    if (isBackspace) {
+    if (isBackspace || isDelete) {
       canvas?.remove(...canvas.getActiveObjects());
       canvas?.discardActiveObject();
     }

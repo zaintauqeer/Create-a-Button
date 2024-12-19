@@ -9,9 +9,14 @@ export default function SuccessPage() {
   useEffect(() => {
     const handleSuccess = async () => {
       const sessionId = searchParams.get('session_id');
-      const encodedData = searchParams.get('data');
+      const orderId = searchParams.get('orderId');
       const totalAmount = parseInt(searchParams.get('totalAmount') || '0');
-      if (!sessionId || !encodedData) {
+
+      const statusFormData = new FormData();
+      statusFormData.append('orderId', orderId || '');
+      statusFormData.append('paymentStatus', "success");
+
+      if (!sessionId) {
         console.error('Missing session ID or form data');
         return;
       }
@@ -19,36 +24,10 @@ export default function SuccessPage() {
       const image = localStorage.getItem("previewImage");
 
       try {
-        const formData = JSON.parse(decodeURIComponent(encodedData));
-
-        console.log(formData.firstName + ' ' + formData.lastName)
-    
         // Send data to your backend API
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/addOrder`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sessionId,
-            cart:[{
-              orderQuantity:1,
-              price:totalAmount,
-              originalPrice:totalAmount,
-              status:"active",
-            }],
-           
-            name: formData.firstName + ' ' + formData.lastName,
-            email: formData.guestEmail,
-            contact: formData.phone,
-            address: formData.address,
-            city: formData.city,
-            country: formData.country,
-            zipCode: formData.zipCode,
-            totalAmount: totalAmount,
-            shippingCost: 0,
-            subTotal: totalAmount,
-          }),
+          body: statusFormData,
         });
 
         if (!response.ok) {

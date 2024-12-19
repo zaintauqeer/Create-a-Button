@@ -1,6 +1,7 @@
 import { fabric } from "fabric";
 import { ITextboxOptions } from "fabric/fabric-impl";
 import * as material from "material-colors";
+import { CurvedTextOptions } from './hooks/use-curved-text';
 
 export const JSON_KEYS = [
   "name",
@@ -262,4 +263,5 @@ export interface Editor {
   getActiveStrokeWidth: () => number;
   getActiveStrokeDashArray: () => number[];
   selectedObjects: fabric.Object[];
+  addCurvedText: (text: string, options?: Partial<CurvedTextOptions>) => void;
 };

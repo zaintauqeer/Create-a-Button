@@ -32,6 +32,9 @@ import { useAutoResize } from "@/features/editor/hooks/use-auto-resize";
 import { useCanvasEvents } from "@/features/editor/hooks/use-canvas-events";
 import { useWindowEvents } from "@/features/editor/hooks/use-window-events";
 import { useLoadState } from "@/features/editor/hooks/use-load-state";
+import { useCurvedText } from './use-curved-text';
+import { ITextboxOptions } from "fabric/fabric-impl";
+import { CurvedTextOptions } from './use-curved-text';
 
 const buildEditor = ({
   save,
@@ -148,6 +151,8 @@ const buildEditor = ({
     canvas.add(object);
     canvas.setActiveObject(object);
   };
+
+  const { addCurvedText } = useCurvedText(canvas);
 
   return {
     savePreview,
@@ -618,6 +623,9 @@ const buildEditor = ({
       return value;
     },
     selectedObjects,
+    addCurvedText: (text: string, options?: Partial<CurvedTextOptions>) => {
+      addCurvedText(text, { ...options, fill: fillColor });
+    },
   };
 };
 

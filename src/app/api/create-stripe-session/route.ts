@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { formData, items } = body;
+    const { formData,orderId, items } = body;
 
     // Store formData in the session metadata
     const session = await stripe.checkout.sessions.create({
@@ -35,12 +35,12 @@ export async function POST(req: Request) {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}&totalAmount=1200&data=${encodeURIComponent(JSON.stringify(formData))}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}&orderId=${orderId}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout`,
       customer_email: formData.guestEmail,
-      shipping_address_collection: {
-        allowed_countries: ['US', 'CA', 'GB'],
-      },
+      // shipping_address_collection: {
+      //   allowed_countries: ['US', 'CA', 'GB'],
+      // },
       metadata: {
         ...formData,
       },
