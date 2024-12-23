@@ -79,7 +79,7 @@ export const TextSidebar = ({
           >
             Paragraph
           </Button>
-          <Button
+          {/* <Button
             className="w-full h-16"
             variant="secondary"
             size="lg"
@@ -88,7 +88,7 @@ export const TextSidebar = ({
             })}
           >
             Curved text
-          </Button>
+          </Button> */}
        
         </div>
       </ScrollArea>

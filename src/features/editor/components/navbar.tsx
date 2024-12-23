@@ -165,7 +165,7 @@ export const Navbar = ({
           </div>
         )} */}
         <div className="ml-auto flex items-center gap-x-4">
-          <DropdownMenu modal={false}>
+          {/* <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="ghost">
                 Export
@@ -173,7 +173,7 @@ export const Navbar = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-60">
-              {/* <DropdownMenuItem
+              <DropdownMenuItem
                 className="flex items-center gap-x-2"
                 onClick={() => editor?.saveJson()}
               >
@@ -184,7 +184,7 @@ export const Navbar = ({
                     Save for later editing
                   </p>
                 </div>
-              </DropdownMenuItem> */}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="flex items-center gap-x-2"
                 onClick={() => editor?.savePng()}
@@ -223,7 +223,7 @@ export const Navbar = ({
               </DropdownMenuItem>
           
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           <Button onClick={handleAddToCart}>
                 Add to cart
           </Button>

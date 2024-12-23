@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { Check, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react';
+import ProductVariations from './variations';
 
 
 const DesignPreview = () => {
@@ -106,7 +107,7 @@ const DesignPreview = () => {
                                 </div>
                             </div>
                         </div>
-
+                        {/* <ProductVariations /> */}
                         <div className='mt-8 flex justify-end pb-12'>
                             <Button
                                 onClick={() => handleCheckout()}

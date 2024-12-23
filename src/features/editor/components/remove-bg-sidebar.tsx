@@ -37,10 +37,10 @@ export const RemoveBgSidebar = ({
   };
 
   const onClick = () => {
-    if (shouldBlock) {
-      triggerPaywall();
-      return;
-    }
+    // if (shouldBlock) {
+    //   triggerPaywall();
+    //   return;
+    // }
 
     mutation.mutate({
       image: imageSrc,
