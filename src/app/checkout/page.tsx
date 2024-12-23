@@ -279,7 +279,8 @@ export default function CheckoutPage() {
 									<label htmlFor="phone" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Phone Number* </label>
 									<div className="flex items-center">
 										<div className="relative w-full">
-											<input name="phone" type="text" id="phone" className="z-20 block w-full rounded-lg border  border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:border-s-gray-700  dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"
+										{/* pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" */}
+											<input name="phone" type="text" id="phone" className="z-20 block w-full rounded-lg border  border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:border-s-gray-700  dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500"  placeholder="123-456-7890"
 												value={formData.phone}
 												onChange={handleInputChange} />
 											{errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
