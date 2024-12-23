@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from "next/link";
+import { buttonVariants } from '@/components/ui/button'
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
@@ -64,9 +66,17 @@ export default function SuccessPage() {
           </svg>
         </div>
         <h1 className="mb-4 text-2xl font-bold">Payment Successful!</h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 mb-10">
           Thank you for your purchase. We'll send you a confirmation email shortly.
         </p>
+        <Link
+            href='/'
+            className={buttonVariants({
+                size: 'lg',
+                className: 'flex items-center gap-1 text-xl',
+            })}>
+            Continue
+        </Link>
       </div>
     </div>
   );
