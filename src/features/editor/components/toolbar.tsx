@@ -372,7 +372,7 @@ export const Toolbar = ({
           </Hint>
         </div>
       )}
-      {/* {isImage && (
+      {isImage && (
         <div className="flex items-center h-full justify-center">
           <Hint label="Remove background" side="bottom" sideOffset={5}>
             <Button
@@ -387,7 +387,7 @@ export const Toolbar = ({
             </Button>
           </Hint>
         </div>
-      )} */}
+      )}
       <div className="flex items-center h-full justify-center">
         <Hint label="Bring forward" side="bottom" sideOffset={5}>
           <Button

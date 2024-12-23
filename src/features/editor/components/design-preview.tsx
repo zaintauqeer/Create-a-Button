@@ -41,7 +41,7 @@ const DesignPreview = () => {
 
     function handleCheckout() {
         console.log(products);
-        router.push(`/checkout?productPrice=${JSON.stringify(firstProduct)}`);
+        router.push(`/checkout?productPrice=10`);
         if (products.length > 0) {
             const firstProduct = products[0].price;
         } else {
@@ -93,7 +93,7 @@ const DesignPreview = () => {
                                 <div className='flex items-center justify-between py-1 mt-2'>
                                     <p className='text-gray-600'>Base price</p>
                                     <p className='font-medium text-gray-900'>
-                                        ${products[0]?.price || '$0.00'}
+                                         $12.00
                                     </p>
                                 </div>
 
@@ -102,7 +102,7 @@ const DesignPreview = () => {
                                 <div className='flex items-center justify-between py-2'>
                                     <p className='font-semibold text-gray-900'>Order total</p>
                                     <p className='font-semibold text-gray-900'>
-                                        ${products[0]?.price || '$0.00'}
+                                         $12.00
                                     </p>
                                 </div>
                             </div>
