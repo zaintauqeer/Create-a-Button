@@ -41,9 +41,9 @@ const DesignPreview = () => {
 
     function handleCheckout() {
         console.log(products);
+        router.push(`/checkout?productPrice=${JSON.stringify(firstProduct)}`);
         if (products.length > 0) {
             const firstProduct = products[0].price;
-            router.push(`/checkout?productPrice=${JSON.stringify(firstProduct)}`);
         } else {
             console.error('No products available to checkout');
         }
