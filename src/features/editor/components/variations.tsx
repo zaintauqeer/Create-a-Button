@@ -15,7 +15,7 @@ const ProductVariations = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/all`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

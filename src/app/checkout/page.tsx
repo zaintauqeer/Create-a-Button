@@ -32,6 +32,7 @@ export default function CheckoutPage() {
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [paymentMethod, setPaymentMethod] = useState('credit-card');
 	const [isLoading, setIsLoading] = useState(false);
+	const [checkoutData, setCheckoutData] = useState<any>(null);
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -49,6 +50,17 @@ export default function CheckoutPage() {
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	};
+
+	
+
+    useEffect(() => {
+        // Retrieve the data from localStorage
+        const data = localStorage.getItem("checkoutData");
+        if (data) {
+			console.log(data)
+            setCheckoutData(JSON.parse(data)); // Parse the JSON string back into an object
+        }
+    }, []);
 
 	const createStripeCheckoutSession = async (orderId: string) => {
 		try {
@@ -152,8 +164,9 @@ export default function CheckoutPage() {
 				newFormData.append('cart', JSON.stringify(cart));
 				newFormData.append('image', file);
 				newFormData.append('paymentMethod', paymentMethod);
+				newFormData.append('size', checkoutData?.size);
 				// Send data to your backend
-				const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/addOrder`, {
+				const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`, {
 					method: 'POST',
 					body: newFormData,
 				});
@@ -346,7 +359,7 @@ export default function CheckoutPage() {
 							<div className="-my-3 divide-y divide-gray-200 dark:divide-gray-800">
 								<dl className="flex items-center justify-between gap-4 py-3">
 									<dt className="text-base font-normal text-gray-500 dark:text-gray-400">Subtotal</dt>
-									<dd className="text-base font-medium text-gray-900 dark:text-white">$12.00</dd>
+									<dd className="text-base font-medium text-gray-900 dark:text-white">$ {checkoutData?.price}</dd>
 								</dl>
 
 								<dl className="flex items-center justify-between gap-4 py-3">
@@ -358,7 +371,7 @@ export default function CheckoutPage() {
 
 								<dl className="flex items-center justify-between gap-4 py-3">
 									<dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-									<dd className="text-base font-bold text-gray-900 dark:text-white">$12.00</dd>
+									<dd className="text-base font-bold text-gray-900 dark:text-white">$ {checkoutData?.price}</dd>
 								</dl>
 							</div>
 						</div>

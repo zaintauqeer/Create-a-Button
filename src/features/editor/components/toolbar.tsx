@@ -17,7 +17,9 @@ import {
   AlignCenter, 
   AlignRight,
   Trash,
+  ALargeSmall,
   SquareSplitHorizontal,
+  
   Copy
 } from "lucide-react";
 
@@ -161,290 +163,360 @@ export const Toolbar = ({
   }
 
   return (
-    <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2">
+    <div className="shrink-0 min-h-[56px] border-b bg-white w-full lg:flex lg:items-center lg:overflow-x-auto grid grid-cols-4   z-[49] p-2 gap-3">
       {!isImage && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Color" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeActiveTool("fill")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                activeTool === "fill" && "bg-gray-100"
-              )}
-            >
-              <div
-                className="rounded-sm size-4 border"
-                style={{ backgroundColor: properties.fillColor }}
-              />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button 
+                onClick={() => onChangeActiveTool("fill")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  activeTool === "fill" && "bg-gray-100"
+                )}
+              >
+                <div
+                  className="rounded-sm lg:size-4 size-6 border"
+                  style={{ backgroundColor: properties.fillColor }}
+                />
+              </Button>
+              <small className="lg:hidden">Color</small>
+            </div>
           </Hint>
         </div>
       )}
       {!isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Stroke color" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeActiveTool("stroke-color")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                activeTool === "stroke-color" && "bg-gray-100"
-              )}
-            >
-              <div
-                className="rounded-sm size-4 border-2 bg-white"
-                style={{ borderColor: properties.strokeColor }}
-              />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeActiveTool("stroke-color")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  activeTool === "stroke-color" && "bg-gray-100"
+                )}
+              >
+                <div
+                  className="rounded-sm lg:size-4 size-6 border-2 bg-white"
+                  style={{ borderColor: properties.strokeColor }}
+                />
+              </Button>
+              <small className="lg:hidden">Stroke Color</small>
+            </div>
           </Hint>
         </div>
       )}
       {!isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Stroke width" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeActiveTool("stroke-width")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                activeTool === "stroke-width" && "bg-gray-100"
-              )}
-            >
-              <BsBorderWidth className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeActiveTool("stroke-width")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  activeTool === "stroke-width" && "bg-gray-100"
+                )}
+              >
+                <BsBorderWidth className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Stroke Width</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Font" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeActiveTool("font")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                "w-auto px-2 text-sm",
-                activeTool === "font" && "bg-gray-100"
-              )}
-            >
-              <div className="max-w-[100px] truncate">
-                {properties.fontFamily}
-              </div>
-              <ChevronDown className="size-4 ml-2 shrink-0" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeActiveTool("font")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  "w-auto px-2 lg:text-sm text-lg",
+                  activeTool === "font" && "bg-gray-100"
+                )}
+              >
+                <div className="max-w-[100px] truncate">
+                  {properties.fontFamily}
+                </div>
+                {/* <ChevronDown className="size-4 ml-2 shrink-0" /> */}
+              </Button>
+              <small className="lg:hidden">Font</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Bold" side="bottom" sideOffset={5}>
-            <Button
-              onClick={toggleBold}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.fontWeight > 500 && "bg-gray-100"
-              )}
-            >
-              <FaBold className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={toggleBold}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.fontWeight > 500 && "bg-gray-100"
+                )}
+              >
+                <FaBold className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Bold</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Italic" side="bottom" sideOffset={5}>
-            <Button
-              onClick={toggleItalic}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.fontStyle === "italic" && "bg-gray-100"
-              )}
-            >
-              <FaItalic className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={toggleItalic}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.fontStyle === "italic" && "bg-gray-100"
+                )}
+              >
+                <FaItalic className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Italic</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Underline" side="bottom" sideOffset={5}>
-            <Button
-              onClick={toggleUnderline}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.fontUnderline && "bg-gray-100"
-              )}
-            >
-              <FaUnderline className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={toggleUnderline}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.fontUnderline && "bg-gray-100"
+                )}
+              >
+                <FaUnderline className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Underline</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Strike" side="bottom" sideOffset={5}>
-            <Button
-              onClick={toggleLinethrough}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.fontLinethrough && "bg-gray-100"
-              )}
-            >
-              <FaStrikethrough className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={toggleLinethrough}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.fontLinethrough && "bg-gray-100"
+                )}
+              >
+                <FaStrikethrough className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Linethrough</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Align left" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeTextAlign("left")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.textAlign === "left" && "bg-gray-100"
-              )}
-            >
-              <AlignLeft className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeTextAlign("left")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.textAlign === "left" && "bg-gray-100"
+                )}
+              >
+                <AlignLeft className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Left Align</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Align center" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeTextAlign("center")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.textAlign === "center" && "bg-gray-100"
-              )}
-            >
-              <AlignCenter className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeTextAlign("center")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.textAlign === "center" && "bg-gray-100"
+                )}
+              >
+                <AlignCenter className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Center Align</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Align right" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeTextAlign("right")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                properties.textAlign === "right" && "bg-gray-100"
-              )}
-            >
-              <AlignRight className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeTextAlign("right")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  properties.textAlign === "right" && "bg-gray-100"
+                )}
+              >
+                <AlignRight className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Right Align</small>
+            </div>
           </Hint>
         </div>
       )}
       {isText && (
-        <div className="flex items-center h-full justify-center">
-         <FontSizeInput
+        <div className="flex items-center  justify-center">
+          <Hint label="Font Size" side="bottom" sideOffset={5}>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeActiveTool("fontSize")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  "w-auto px-2 text-lg",
+                  activeTool === "fontSize" && "bg-gray-100"
+                )}
+              >
+                <ALargeSmall className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Font Size</small>
+            </div>
+          </Hint>
+         {/* <FontSizeInput
             value={properties.fontSize}
             onChange={onChangeFontSize}
-         />
+         /> */}
         </div>
       )}
       {isImage && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Filters" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeActiveTool("filter")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                activeTool === "filter" && "bg-gray-100"
-              )}
-            >
-              <TbColorFilter className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeActiveTool("filter")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  activeTool === "filter" && "bg-gray-100"
+                )}
+              >
+                <TbColorFilter className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Filter</small>
+            </div>
           </Hint>
         </div>
       )}
       {isImage && (
-        <div className="flex items-center h-full justify-center">
+        <div className="flex items-center  justify-center">
           <Hint label="Remove background" side="bottom" sideOffset={5}>
-            <Button
-              onClick={() => onChangeActiveTool("remove-bg")}
-              size="icon"
-              variant="ghost"
-              className={cn(
-                activeTool === "remove-bg" && "bg-gray-100"
-              )}
-            >
-              <SquareSplitHorizontal className="size-4" />
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={() => onChangeActiveTool("remove-bg")}
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  activeTool === "remove-bg" && "bg-gray-100"
+                )}
+              >
+                <SquareSplitHorizontal className="lg:size-4 size-6" />
+              </Button>
+              <small className="lg:hidden">Remove BG</small>
+            </div>
           </Hint>
         </div>
       )}
-      <div className="flex items-center h-full justify-center">
+      <div className="flex items-center  justify-center">
         <Hint label="Bring forward" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => editor?.bringForward()}
-            size="icon"
-            variant="ghost"
-          >
-            <ArrowUp className="size-4" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              onClick={() => editor?.bringForward()}
+              size="icon"
+              variant="ghost"
+            >
+              <ArrowUp className="lg:size-4 size-6" />
+            </Button>
+            <small className="lg:hidden">Forward</small>
+          </div>
         </Hint>
       </div>
-      <div className="flex items-center h-full justify-center">
+      <div className="flex items-center  justify-center">
         <Hint label="Send backwards" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => editor?.sendBackwards()}
-            size="icon"
-            variant="ghost"
-          >
-            <ArrowDown className="size-4" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              onClick={() => editor?.sendBackwards()}
+              size="icon"
+              variant="ghost"
+            >
+              <ArrowDown className="lg:size-4 size-6" />
+            </Button>
+            <small className="lg:hidden">Backward</small>
+          </div>
         </Hint>
       </div>
-      <div className="flex items-center h-full justify-center">
+      <div className="flex items-center  justify-center">
         <Hint label="Opacity" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => onChangeActiveTool("opacity")}
-            size="icon"
-            variant="ghost"
-            className={cn(activeTool === "opacity" && "bg-gray-100")}
-          >
-            <RxTransparencyGrid className="size-4" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              onClick={() => onChangeActiveTool("opacity")}
+              size="icon"
+              variant="ghost"
+              className={cn(activeTool === "opacity" && "bg-gray-100")}
+            >
+              <RxTransparencyGrid className="lg:size-4 size-6" />
+            </Button>
+            <small className="lg:hidden">Opacity</small>
+          </div>
         </Hint>
       </div>
-      <div className="flex items-center h-full justify-center">
+      <div className="flex items-center  justify-center">
         <Hint label="Duplicate" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => {
-              editor?.onCopy();
-              editor?.onPaste();
-            }}
-            size="icon"
-            variant="ghost"
-          >
-            <Copy className="size-4" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              onClick={() => {
+                editor?.onCopy();
+                editor?.onPaste();
+              }}
+              size="icon"
+              variant="ghost"
+            >
+              <Copy className="lg:size-4 size-6" />
+            </Button>
+            <small className="lg:hidden">Dublicate</small>
+          </div>
         </Hint>
       </div>
-      <div className="flex items-center h-full justify-center">
+      <div className="flex items-center  justify-center">
         <Hint label="Delete" side="bottom" sideOffset={5}>
-          <Button
-            onClick={() => editor?.delete()}
-            size="icon"
-            variant="ghost"
-          >
-            <Trash className="size-4" />
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button
+              onClick={() => editor?.delete()}
+              size="icon"
+              variant="ghost"
+            >
+              <Trash className="lg:size-4 size-6" />
+            </Button>
+            <small className="lg:hidden">Delete</small>
+          </div>
         </Hint>
       </div>
     </div>

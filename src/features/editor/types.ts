@@ -103,6 +103,7 @@ export type ActiveTool =
   | "stroke-color"
   | "stroke-width"
   | "font"
+  | "fontSize"
   | "opacity"
   | "filter"
   | "settings"
