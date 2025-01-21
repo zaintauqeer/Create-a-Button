@@ -19,30 +19,39 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { formData,orderId, items } = body;
+    const { formData, orderId, items } = body;
 
-    // Store formData in the session metadata
+    // Ensure items array is valid and includes required data
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { error: 'Invalid or missing items data' },
+        { status: 400 }
+      );
+    }
+
+    // Dynamically calculate total price
+    const lineItems = items.map((item: { name: string; price: number; quantity: number }) => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.name,
+        },
+        unit_amount: item.price, // Dynamic price (in cents)
+      },
+      quantity: item.quantity,
+    }));
+
+    // Create a Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Your Product Name',
-          },
-          unit_amount: 1200, // $12.00 in cents
-        },
-        quantity: 1,
-      }],
+      line_items: lineItems,
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}&orderId=${orderId}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout`,
-      customer_email: formData.guestEmail,
-      // shipping_address_collection: {
-      //   allowed_countries: ['US', 'CA', 'GB'],
-      // },
+      customer_email: formData?.guestEmail,
       metadata: {
-        ...formData,
+        orderId,
+        ...formData, // Store additional data for reference
       },
     });
 

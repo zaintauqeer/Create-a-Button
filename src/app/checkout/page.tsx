@@ -27,8 +27,6 @@ export default function CheckoutPage() {
 		phone: '',
 		zipCode: '',
 	});
-	const productPrice = searchParams.get('productPrice');
-	console.log(productPrice);
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [paymentMethod, setPaymentMethod] = useState('credit-card');
 	const [isLoading, setIsLoading] = useState(false);
@@ -62,32 +60,32 @@ export default function CheckoutPage() {
         }
     }, []);
 
-	const createStripeCheckoutSession = async (orderId: string) => {
-		try {
-			const response = await fetch('api/create-stripe-session', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					formData,
-					orderId,
-					items: [
-						{
-							price: 'price_1QUNX8BqUGk2zLFg5VoOocJ4', // Your Stripe price ID
-							quantity: 1,
-						}
-					],
-				}),
-			});
+	// const createStripeCheckoutSession = async (orderId: string) => {
+	// 	try {
+	// 		const response = await fetch('api/create-stripe-session', {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: JSON.stringify({
+	// 				formData,
+	// 				orderId,
+	// 				items: [
+	// 					{
+	// 						price: 'price_1QUNX8BqUGk2zLFg5VoOocJ4', // Your Stripe price ID
+	// 						quantity: 1,
+	// 					}
+	// 				],
+	// 			}),
+	// 		});
 
-			const { url } = await response.json();
-			console.log(url);
-			window.location.href = url;
-		} catch (error) {
-			console.error('Error creating Stripe session:', error);
-		}
-	};
+	// 		const { url } = await response.json();
+	// 		console.log(url);
+	// 		window.location.href = url;
+	// 	} catch (error) {
+	// 		console.error('Error creating Stripe session:', error);
+	// 	}
+	// };
 
 	// const createPayPalOrder = async () => {
 	// 	try {
@@ -114,84 +112,112 @@ export default function CheckoutPage() {
 	// 	}
 	// };
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const createStripeCheckoutSession = async (orderId: string, totalAmount: number) => {
+		try {
+		  const response = await fetch('/api/create-stripe-session', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+			  formData,
+			  orderId,
+			  items: [
+				{
+				  name: 'Custom Button',
+				  price: totalAmount * 100, // Convert to cents
+				  quantity: 1,
+				},
+			  ],
+			}),
+		  });
+	  
+		  const { url } = await response.json();
+		  if (!url) {
+			throw new Error('Stripe session URL not returned');
+		  }
+		  window.location.href = url;
+		} catch (error) {
+		  console.error('Error creating Stripe session:', error);
+		}
+	  };
+	  
+	  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (validateForm()) {
-			setIsLoading(true);
-			try {
-				// Retrieve the image data from local storage
-				const imageData = localStorage.getItem('previewImage');
-				if (!imageData) {
-					throw new Error('No image data found in local storage');
-				}
-
-				// Convert base64 to a Blob
-				const byteString = atob(imageData.split(',')[1]);
-				const mimeString = imageData.split(',')[0].split(':')[1].split(';')[0];
-				const ab = new ArrayBuffer(byteString.length);
-				const ia = new Uint8Array(ab);
-				for (let i = 0; i < byteString.length; i++) {
-					ia[i] = byteString.charCodeAt(i);
-				}
-				const blob = new Blob([ab], { type: mimeString });
-
-				// Create a File object
-				const file = new File([blob], 'image.png', { type: mimeString });
-
-				const totalAmount = 12.00;
-				// Prepare form data
-				let cart = [{
-					title: "Button",
-					orderQuantity:1,
-					price:totalAmount,
-					originalPrice:totalAmount,
-					status:"active",
-				}]
-				const uniqueId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-				const newFormData = new FormData();
-				newFormData.append('orderId', uniqueId);
-				newFormData.append('email', formData.guestEmail);
-				newFormData.append('name', formData.firstName + ' ' + formData.lastName);
-				newFormData.append('lastName', formData.lastName);
-				newFormData.append('address', formData.address);
-				newFormData.append('city', formData.city);
-				newFormData.append('country', formData.country);
-				newFormData.append('contact', formData.phone);
-				newFormData.append('zipCode', formData.zipCode);
-				newFormData.append('totalAmount', totalAmount.toString());
-				newFormData.append('shippingCost', '0');
-				newFormData.append('subTotal', totalAmount.toString());
-				newFormData.append('cart', JSON.stringify(cart));
-				newFormData.append('image', file);
-				newFormData.append('paymentMethod', paymentMethod);
-				newFormData.append('size', checkoutData?.size);
-				// Send data to your backend
-				const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`, {
-					method: 'POST',
-					body: newFormData,
-				});
-
-				if (!orderResponse.ok) {
-					throw new Error('Failed to create order');
-				}
-
-				const orderData = await orderResponse.json();
-
-				// Then proceed with Stripe checkout
-				if (paymentMethod === 'credit-card') {
-					await createStripeCheckoutSession(uniqueId);
-				} 
-				// else if (paymentMethod === 'paypal') {
-				// 	await createPayPalOrder();
-				// }
-			} catch (error) {
-				console.error('Payment error:', error);
-			} finally {
-				setIsLoading(false);
+		  setIsLoading(true);
+		  try {
+			const imageData = localStorage.getItem('previewImage');
+			if (!imageData) {
+			  throw new Error('No image data found in local storage');
 			}
+	  
+			const byteString = atob(imageData.split(',')[1]);
+			const mimeString = imageData.split(',')[0].split(':')[1].split(';')[0];
+			const ab = new ArrayBuffer(byteString.length);
+			const ia = new Uint8Array(ab);
+			for (let i = 0; i < byteString.length; i++) {
+			  ia[i] = byteString.charCodeAt(i);
+			}
+			const blob = new Blob([ab], { type: mimeString });
+			const file = new File([blob], 'image.png', { type: mimeString });
+	  
+			const totalAmount = checkoutData.price;
+			const cart = [
+			  {
+				title: 'Button',
+				orderQuantity: 1,
+				price: totalAmount,
+				originalPrice: totalAmount,
+				status: 'active',
+			  },
+			];
+			const uniqueId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+			const newFormData = new FormData();
+			newFormData.append('orderId', uniqueId);
+			newFormData.append('email', formData.guestEmail);
+			newFormData.append('name', `${formData.firstName} ${formData.lastName}`);
+			newFormData.append('address', formData.address);
+			newFormData.append('city', formData.city);
+			newFormData.append('country', formData.country);
+			newFormData.append('contact', formData.phone);
+			newFormData.append('zipCode', formData.zipCode);
+			newFormData.append('totalAmount', totalAmount.toString());
+			newFormData.append('shippingCost', '0');
+			newFormData.append('subTotal', totalAmount.toString());
+			newFormData.append('size', checkoutData?.size);
+			newFormData.append('cart', JSON.stringify(cart));
+			newFormData.append('image', file);
+			newFormData.append('paymentMethod', paymentMethod);
+	  
+			const orderResponse = await fetch(
+			  `${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`,
+			  {
+				method: 'POST',
+				body: newFormData,
+			  }
+			);
+	  
+			if (!orderResponse.ok) {
+			  throw new Error('Failed to create order');
+			}
+	  
+			const orderData = await orderResponse.json();
+	  
+			if (paymentMethod === 'credit-card') {
+			  await createStripeCheckoutSession(uniqueId, totalAmount);
+			} else if (paymentMethod === 'paypal') {
+			  // Uncomment when ready to use PayPal
+			  // await createPayPalOrder();
+			}
+		  } catch (error) {
+			console.error('Payment error:', error);
+		  } finally {
+			setIsLoading(false);
+		  }
 		}
-	};
-
+	  };
+	  
 	return (
 		<section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
 			<form onSubmit={handleSubmit} className="mx-auto max-w-screen-xl px-4 2xl:px-0">
