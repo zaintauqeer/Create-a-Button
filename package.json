@@ -32,6 +32,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "color-convert": "^2.0.1",
     "date-fns": "^3.6.0",
     "drizzle-orm": "^0.31.4",
     "drizzle-zod": "^0.5.1",
@@ -71,6 +72,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/color-convert": "^2.0.4",
     "@types/fabric": "5.3.0",
     "@types/lodash-es": "^4.17.12",
     "@types/lodash.debounce": "^4.0.9",
