@@ -43,14 +43,19 @@ export const ColorPicker = ({
         : [0, 0, 0]; // Ensure rgb is always an array
     return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
   });
-  
-  
 
   const handleCmykChange = (newCmyk: any) => {
     setCmyk(newCmyk);
     const rgb = cmykToRgb(newCmyk.c, newCmyk.m, newCmyk.y, newCmyk.k);
     const formattedValue = rgbaObjectToString(rgb);
     onChange(formattedValue);
+  };
+
+  const sliderBackgrounds = {
+    c: "linear-gradient(to right, black, cyan)",
+    m: "linear-gradient(to right, black, magenta)",
+    y: "linear-gradient(to right, black, yellow)",
+    k: "linear-gradient(to right, white, black)",
   };
 
   return (
@@ -63,16 +68,8 @@ export const ColorPicker = ({
         }}
         className="border rounded-lg"
       />
-      <CirclePicker
-        color={value}
-        colors={colors}
-        onChangeComplete={(color) => {
-          const formattedValue = rgbaObjectToString(color.rgb);
-          onChange(formattedValue);
-        }}
-      />
       <div className="space-y-2">
-        {["C", "M", "Y", "K"].map((channel, index) => (
+        {["C", "M", "Y", "K"].map((channel) => (
           <div key={channel} className="flex items-center space-x-2">
             <label htmlFor={channel} className="w-6 text-center">
               {channel}
@@ -90,7 +87,12 @@ export const ColorPicker = ({
                   [channel.toLowerCase()]: parseFloat(e.target.value),
                 })
               }
-              className="flex-1"
+              className="flex-1 appearance-none h-2 rounded-lg"
+              style={{
+                background: sliderBackgrounds[channel.toLowerCase() as keyof typeof sliderBackgrounds],
+                borderRadius: 2,
+                height:"8px",
+              }}
             />
             <span className="w-10 text-right">
               {Math.round(cmyk[channel.toLowerCase() as keyof typeof cmyk] * 100)}%
@@ -98,6 +100,14 @@ export const ColorPicker = ({
           </div>
         ))}
       </div>
+      <CirclePicker
+        color={value}
+        colors={colors}
+        onChangeComplete={(color) => {
+          const formattedValue = rgbaObjectToString(color.rgb);
+          onChange(formattedValue);
+        }}
+      />
     </div>
   );
 };
