@@ -1,91 +1,100 @@
-import { RgbaColorPicker } from "react-colorful";
+import { ChromePicker, CirclePicker } from "react-color";
 import { useState } from "react";
+
 import { colors } from "@/features/editor/types";
 import { rgbaObjectToString } from "@/features/editor/utils";
-import convert from "color-convert"; // Install this library: npm install color-convert
 
 interface ColorPickerProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
-  // Parse RGBA string to object
-  const parseRgba = (rgba: string) => {
-    const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/);
-    if (match) {
-      return {
-        r: parseInt(match[1], 10),
-        g: parseInt(match[2], 10),
-        b: parseInt(match[3], 10),
-        a: parseFloat(match[4] ?? "1"),
-      };
-    }
-    return { r: 0, g: 0, b: 0, a: 1 }; // Default color
-  };
+// Helper function to convert CMYK to RGB
+const cmykToRgb = (c: number, m: number, y: number, k: number) => {
+  const r = 255 * (1 - c) * (1 - k);
+  const g = 255 * (1 - m) * (1 - k);
+  const b = 255 * (1 - y) * (1 - k);
+  return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
+};
 
-  const rgbaColor = parseRgba(value);
+// Helper function to convert RGB to CMYK
+const rgbToCmyk = (r: number, g: number, b: number) => {
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+  const k = 1 - Math.max(rNorm, gNorm, bNorm);
+  const c = (1 - rNorm - k) / (1 - k) || 0;
+  const m = (1 - gNorm - k) / (1 - k) || 0;
+  const y = (1 - bNorm - k) / (1 - k) || 0;
+  return { c, m, y, k };
+};
 
-  // Convert RGBA to CMYK
-  const rgbToCmyk = (r: number, g: number, b: number) => {
-    const [c, m, y, k] = convert.rgb.cmyk(r, g, b);
-    return { c, m, y, k };
-  };
+export const ColorPicker = ({
+  value,
+  onChange,
+}: ColorPickerProps) => {
+  const [cmyk, setCmyk] = useState(() => {
+    const rgb: number[] =
+      value.startsWith("rgb")
+        ? value
+            .replace(/rgba?\(|\)/g, "")
+            .split(",")
+            .map((v) => parseFloat(v))
+        : [0, 0, 0]; // Ensure rgb is always an array
+    return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
+  });
+  
+  
 
-  // Convert CMYK to RGB
-  const cmykToRgb = (c: number, m: number, y: number, k: number) => {
-    const [r, g, b] = convert.cmyk.rgb(c, m, y, k);
-    return { r, g, b, a: 1 };
-  };
-
-  // Get initial CMYK values
-  const initialCmyk = rgbToCmyk(rgbaColor.r, rgbaColor.g, rgbaColor.b);
-  const [cmyk, setCmyk] = useState(initialCmyk);
-
-  const handleCmykChange = (channel: keyof typeof cmyk, value: number) => {
-    const newCmyk = { ...cmyk, [channel]: value };
+  const handleCmykChange = (newCmyk: any) => {
     setCmyk(newCmyk);
-    const newRgb = cmykToRgb(newCmyk.c, newCmyk.m, newCmyk.y, newCmyk.k);
-    onChange(rgbaObjectToString(newRgb));
+    const rgb = cmykToRgb(newCmyk.c, newCmyk.m, newCmyk.y, newCmyk.k);
+    const formattedValue = rgbaObjectToString(rgb);
+    onChange(formattedValue);
   };
 
   return (
     <div className="w-full space-y-4">
-      <RgbaColorPicker
-        color={rgbaColor}
+      <ChromePicker
+        color={value}
         onChange={(color) => {
-          const formattedValue = rgbaObjectToString(color);
+          const formattedValue = rgbaObjectToString(color.rgb);
           onChange(formattedValue);
-          setCmyk(rgbToCmyk(color.r, color.g, color.b)); // Sync CMYK values
         }}
         className="border rounded-lg"
       />
-      <div className="flex flex-wrap gap-2">
-        {colors.map((color) => (
-          <div
-            key={color}
-            className="w-8 h-8 rounded-full cursor-pointer"
-            style={{ backgroundColor: color }}
-            onClick={() => onChange(color)}
-          />
-        ))}
-      </div>
-      <div className="grid grid-cols-4 gap-2">
-        {["c", "m", "y", "k"].map((channel) => (
-          <div key={channel}>
-            <label className="block text-sm font-medium text-gray-700">
-              {channel.toUpperCase()}
+      <CirclePicker
+        color={value}
+        colors={colors}
+        onChangeComplete={(color) => {
+          const formattedValue = rgbaObjectToString(color.rgb);
+          onChange(formattedValue);
+        }}
+      />
+      <div className="space-y-2">
+        {["C", "M", "Y", "K"].map((channel, index) => (
+          <div key={channel} className="flex items-center space-x-2">
+            <label htmlFor={channel} className="w-6 text-center">
+              {channel}
             </label>
             <input
-              type="number"
-              min={0}
-              max={100}
-              value={cmyk[channel as keyof typeof cmyk]}
+              id={channel}
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={cmyk[channel.toLowerCase() as keyof typeof cmyk]}
               onChange={(e) =>
-                handleCmykChange(channel as keyof typeof cmyk, Number(e.target.value))
+                handleCmykChange({
+                  ...cmyk,
+                  [channel.toLowerCase()]: parseFloat(e.target.value),
+                })
               }
-              className="mt-1 block w-full border rounded-md"
+              className="flex-1"
             />
+            <span className="w-10 text-right">
+              {Math.round(cmyk[channel.toLowerCase() as keyof typeof cmyk] * 100)}%
+            </span>
           </div>
         ))}
       </div>
