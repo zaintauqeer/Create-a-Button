@@ -24,7 +24,6 @@ const DesignPreview = () => {
     const [imageSrc, setImageSrc] = useState<string | null>(null);
     const [products, setProducts] = useState<any[]>([]);
     const [firstProductPrice, setfirstProductPrice] = useState<any[]>([]);
-    const [firstProductBackType, setfirstBackType] = useState<any[]>([]);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedBackgroundType, setSelectedBackgroundType] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -46,7 +45,7 @@ const DesignPreview = () => {
                 const data = await response.json();
                 setProducts(data.data);
                 setfirstProductPrice(data.data[0].price)
-                setfirstBackType(data.data[0].backType)
+                setLoading(false)
             } catch (error) {
                 console.error('Failed to fetch products:', error);
             }
@@ -58,7 +57,6 @@ const DesignPreview = () => {
     function selectSize(event: React.ChangeEvent<HTMLSelectElement>) {
         const size = event.target.value
         setSelectedSize(size)
-        setLoading(false)
     }
     function handleCheckout() {
         if (selectedSize) {
@@ -74,7 +72,7 @@ const DesignPreview = () => {
             alert("Select Size")
         }
     }
-
+    console.log("asd",selectedSize,selectedBackgroundType)
     return (
         <div className='container'>
             <div className='pt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12'>
@@ -113,44 +111,70 @@ const DesignPreview = () => {
                         </div>
                     </div>
                     <div className='mt-8'>
-                        <div className="flex">
-                            <div className="col-span-2">
-                                <select onChange={selectSize} className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
-                                    <option value="" selected hidden>Select Size</option>
-                                    {products[0]?.sizes?.map((size: string) => {
-                                        return (
-                                            <option key={size} value={size}>{size}</option>
-                                        );
-                                    })}
-                                </select>
+                        <h2 className="text-lg font-semibold">Select Back Type</h2>
+                        <div className="grid grid-cols-6">
+                            <div className="">
+                                {loading ? (
+                                    <div className='block w-full h-10'>
+                                        <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                            <p>
+                                                <Skeleton className='h-10' count={1} />
+                                            </p>
+                                        </SkeletonTheme>
+                                    </div>
+                                ):
+                                    <select onChange={selectSize} className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
+                                        <option value="" selected hidden>Select Size</option>
+                                        {products[0]?.sizes?.map((size: string) => {
+                                            return (
+                                                <option key={size} value={size}>{size}</option>
+                                            );
+                                        })}
+                                    </select>
+                                }
                             </div>
                         </div>
                         <div className="mt-4">
-                            <SkeletonTheme baseColor="#eef" highlightColor="#444">
-                                <p>
-                                <Skeleton count={1} />
-                                </p>
-                            </SkeletonTheme>
                             <h2 className="text-lg font-semibold">Select Back Type</h2>
-                            <div className="flex gap-5 mt-2 text-center items-start">
-                                {products[0]?.backType?.map((backType: { name: string; image: string }) => (
-                                    <>
-                                        <div className="flex flex-col mt-2 text-center">
-                                            <label key={backType.name} className={`flex flex-col items-center mb-2 h-10 w-10 border-2 rounded-full ${selectedBackgroundType === backType.name ? 'border-green-500 shadow-lg' : 'border-cyan-950'}`}>
-                                                <input
-                                                    type="radio"
-                                                    name="backType"
-                                                    value={backType.name}
-                                                    className="mr-2 hidden"
-                                                    onChange={() => setSelectedBackgroundType(backType.name)} // Assuming setSelectedBackType is defined in your component
-                                                />
-                                                <img src={backType.image} alt={backType.name} className="h-10 w-10 rounded-full object-cover" />
-                                            </label>
-                                            <span className="text-gray-700">{backType.name}</span>
+                            {loading ? (
+                                    <div className='flex w-full h-10 gap-5'>
+                                        <div className='h-10 w-10'>
+                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                <p>
+                                                    <Skeleton className='h-10 w-10' count={1} />
+                                                </p>
+                                            </SkeletonTheme>
                                         </div>
-                                    </>
-                                ))}
+                                        <div className='h-10 w-10'>
+                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                <p>
+                                                    <Skeleton className='h-10 w-10' count={1} />
+                                                </p>
+                                            </SkeletonTheme>
+                                        </div>
+                                    </div>
+                                ):
+                            <div className="flex gap-5 mt-2 text-center items-start">
+                          
+                                    {products[0]?.backType?.map((backType: { name: string; image: string }) => (
+                                        <>
+                                            <div className="flex flex-col mt-2 text-center">
+                                                <label key={backType.name} className={`flex p-1 flex-col items-center mb-2 h-10 w-10 border-2 rounded-full ${selectedBackgroundType === backType.name ? 'border-primary shadow-lg' : 'border-cyan-950'}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="backType"
+                                                        value={backType.name}
+                                                        className="mr-2 hidden"
+                                                        onChange={() => setSelectedBackgroundType(backType.name)} // Assuming setSelectedBackType is defined in your component
+                                                    />
+                                                    <img src={backType.image} alt={backType.name} className="h-10 w-10 rounded-full object-cover" />
+                                                </label>
+                                                <span className="text-gray-700">{backType.name}</span>
+                                            </div>
+                                        </>
+                                    ))}
                             </div>
+                            }
                         </div>
                     </div>
                     {/* <ProductVariations /> */}
@@ -159,31 +183,51 @@ const DesignPreview = () => {
                             <div className='flow-root text-sm'>
                                 <div className='flex items-center justify-between py-1 mt-2'>
                                     <p className='text-gray-600'>Base price</p>
-                                    <p className='font-medium text-gray-900'>
-                                       $ {firstProductPrice}
-                                    </p>
+                                    {loading ? (
+                                        <div className='h-5 w-8'>
+                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                <p>
+                                                    <Skeleton className='h-5 w-8' count={1} />
+                                                </p>
+                                            </SkeletonTheme>
+                                        </div>
+                                    ):
+                                        <p className='font-medium text-gray-900'>
+                                            $ {firstProductPrice}
+                                        </p>
+                                    }
                                 </div>
 
                                 <div className='my-2 h-px bg-gray-200' />
 
                                 <div className='flex items-center justify-between py-2'>
                                     <p className='font-semibold text-gray-900'>Order total</p>
-                                    <p className='font-semibold text-gray-900'>
-                                       $ {firstProductPrice}
-                                    </p>
+                                    {loading ? (
+                                        <div className='h-5 w-8'>
+                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                <p>
+                                                    <Skeleton className='h-5 w-8' count={1} />
+                                                </p>
+                                            </SkeletonTheme>
+                                        </div>
+                                    ):
+                                        <p className='font-semibold text-gray-900'>
+                                            $ {firstProductPrice}
+                                        </p>
+                                    }
                                 </div>
                             </div>
                         </div>
                         
                         <div className='mt-8 flex justify-end pb-12'>
                             <Button
-                                disabled={loading}
+                                disabled={selectedBackgroundType == null || selectedSize == null}
                                 onClick={() => handleCheckout()}
                                 className='px-4 sm:px-6 lg:px-8'>
                                 Check out <ArrowRight className='h-4 w-4 ml-1.5 inline' />
                             </Button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>
