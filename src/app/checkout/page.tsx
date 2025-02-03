@@ -163,15 +163,20 @@ export default function CheckoutPage() {
 			const file = new File([blob], 'image.png', { type: mimeString });
 	  
 			const totalAmount = checkoutData.price;
+			const backType = checkoutData.backType;
+			const size = checkoutData.size;
 			const cart = [
 			  {
 				title: 'Button',
 				orderQuantity: 1,
 				price: totalAmount,
 				originalPrice: totalAmount,
+				backType,
+				size,
 				status: 'active',
 			  },
 			];
+			console.log(cart)
 			const uniqueId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 			const newFormData = new FormData();
 			newFormData.append('orderId', uniqueId);

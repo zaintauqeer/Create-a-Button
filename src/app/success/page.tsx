@@ -27,7 +27,7 @@ export default function SuccessPage() {
 
       try {
         // Send data to your backend API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/addOrder`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`, {
           method: 'POST',
           body: statusFormData,
         });

@@ -7,6 +7,9 @@ import { Check, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react';
 // import ProductVariations from './variations';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 interface Product {
     id: string;
     name: string;
@@ -21,6 +24,7 @@ const DesignPreview = () => {
     const [imageSrc, setImageSrc] = useState<string | null>(null);
     const [products, setProducts] = useState<any[]>([]);
     const [firstProductPrice, setfirstProductPrice] = useState<any[]>([]);
+    const [firstProductBackType, setfirstBackType] = useState<any[]>([]);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedBackgroundType, setSelectedBackgroundType] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -42,6 +46,7 @@ const DesignPreview = () => {
                 const data = await response.json();
                 setProducts(data.data);
                 setfirstProductPrice(data.data[0].price)
+                setfirstBackType(data.data[0].backType)
             } catch (error) {
                 console.error('Failed to fetch products:', error);
             }
@@ -59,7 +64,8 @@ const DesignPreview = () => {
         if (selectedSize) {
             const checkoutData = {
                 size:selectedSize,
-                price:firstProductPrice
+                price:firstProductPrice,
+                backType:selectedBackgroundType
             }; 
             localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
             router.push('/checkout');
@@ -117,6 +123,33 @@ const DesignPreview = () => {
                                         );
                                     })}
                                 </select>
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <SkeletonTheme baseColor="#eef" highlightColor="#444">
+                                <p>
+                                <Skeleton count={1} />
+                                </p>
+                            </SkeletonTheme>
+                            <h2 className="text-lg font-semibold">Select Back Type</h2>
+                            <div className="flex gap-5 mt-2 text-center items-start">
+                                {products[0]?.backType?.map((backType: { name: string; image: string }) => (
+                                    <>
+                                        <div className="flex flex-col mt-2 text-center">
+                                            <label key={backType.name} className={`flex flex-col items-center mb-2 h-10 w-10 border-2 rounded-full ${selectedBackgroundType === backType.name ? 'border-green-500 shadow-lg' : 'border-cyan-950'}`}>
+                                                <input
+                                                    type="radio"
+                                                    name="backType"
+                                                    value={backType.name}
+                                                    className="mr-2 hidden"
+                                                    onChange={() => setSelectedBackgroundType(backType.name)} // Assuming setSelectedBackType is defined in your component
+                                                />
+                                                <img src={backType.image} alt={backType.name} className="h-10 w-10 rounded-full object-cover" />
+                                            </label>
+                                            <span className="text-gray-700">{backType.name}</span>
+                                        </div>
+                                    </>
+                                ))}
                             </div>
                         </div>
                     </div>

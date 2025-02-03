@@ -163,7 +163,7 @@ export const Toolbar = ({
   }
 
   return (
-    <div className="shrink-0 min-h-[56px] border-b bg-white w-full lg:flex lg:items-center lg:overflow-x-auto grid grid-cols-4   z-[49] p-2 gap-3">
+    <div className="shrink-0 min-h-[56px] border-b bg-white w-full lg:flex lg:items-center lg:overflow-x-auto grid grid-cols-4 lg:static absolute bottom-0 left-0 z-[49] p-2 gap-3">
       {!isImage && (
         <div className="flex items-center  justify-center">
           <Hint label="Color" side="bottom" sideOffset={5}>
