@@ -62,8 +62,8 @@ export const Editor = ({ initialData }: EditorProps) => {
 
   const { init, editor } = useEditor({
     defaultState: initialData.json,
-    defaultWidth: 500,
-    defaultHeight: 500,
+    defaultWidth: 250,
+    defaultHeight: 250,
     clearSelectionCallback: onClearSelection,
     // saveCallback: debouncedSave,
   });
