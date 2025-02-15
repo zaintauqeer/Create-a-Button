@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return ( 
       <>
-        <Navbar />
+        {/* <Navbar /> */}
         {children}
       </>
   );

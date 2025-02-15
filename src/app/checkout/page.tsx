@@ -149,72 +149,117 @@ export default function CheckoutPage() {
 		  try {
 			const imageData = localStorage.getItem('previewImage');
 			if (!imageData) {
-			  throw new Error('No image data found in local storage');
+			throw new Error('No image data found in local storage');
 			}
-	  
-			const byteString = atob(imageData.split(',')[1]);
-			const mimeString = imageData.split(',')[0].split(':')[1].split(';')[0];
-			const ab = new ArrayBuffer(byteString.length);
-			const ia = new Uint8Array(ab);
-			for (let i = 0; i < byteString.length; i++) {
-			  ia[i] = byteString.charCodeAt(i);
+
+			const resizeImage = (imageData: string, width: number, height: number): Promise<Blob> => {
+			return new Promise((resolve, reject) => {
+				const img = new Image();
+				img.onload = () => {
+				const canvas = document.createElement('canvas');
+				canvas.width = width;
+				canvas.height = height;
+				const ctx = canvas.getContext('2d');
+
+				if (!ctx) {
+					reject(new Error('Canvas context is not supported'));
+					return;
+				}
+
+				// Draw the image with new dimensions
+				ctx.drawImage(img, 0, 0, width, height);
+
+				// Convert canvas to Blob
+				canvas.toBlob(
+					(blob) => {
+					if (blob) {
+						resolve(blob);
+					} else {
+						reject(new Error('Image resizing failed'));
+					}
+					},
+					'image/png', // Change format if needed
+					1 // Quality (1 = best quality)
+				);
+				};
+
+				img.onerror = () => reject(new Error('Failed to load image'));
+				img.src = imageData; // Load the image
+			});
+			};
+
+			const processOrder = async () => {
+			try {
+				
+				// Ensure checkoutData and formData are defined
+				if (!checkoutData || !formData) {
+					throw new Error('Missing checkout or form data');
+				}
+				
+				const productSize: number = checkoutData.productSize;
+				const resizedBlob = await resizeImage(imageData, productSize, productSize);
+				const resizedFile = new File([resizedBlob], 'image.png', { type: 'image/png' });
+				const totalAmount: number = checkoutData.price;
+				const backType: string = checkoutData.backType;
+				const size: string = checkoutData.size;
+				const cart = [
+				{
+					title: 'Button',
+					orderQuantity: 1,
+					price: totalAmount,
+					originalPrice: totalAmount,
+					backType,
+					size,
+					status: 'active',
+				},
+				];
+
+				const uniqueId: string = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+				const newFormData = new FormData();
+				newFormData.append('orderId', uniqueId);
+				newFormData.append('email', formData.guestEmail);
+				newFormData.append('name', `${formData.firstName} ${formData.lastName}`);
+				newFormData.append('address', formData.address);
+				newFormData.append('city', formData.city);
+				newFormData.append('country', formData.country);
+				newFormData.append('contact', formData.phone);
+				newFormData.append('zipCode', formData.zipCode);
+				newFormData.append('totalAmount', totalAmount.toString());
+				newFormData.append('shippingCost', '0');
+				newFormData.append('subTotal', totalAmount.toString());
+				newFormData.append('size', checkoutData?.size);
+				newFormData.append('cart', JSON.stringify(cart));
+				newFormData.append('image', resizedFile);
+				newFormData.append('paymentMethod', paymentMethod);
+
+				const orderResponse = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`,
+				{
+					method: 'POST',
+					body: newFormData,
+				}
+				);
+
+				if (!orderResponse.ok) {
+				throw new Error('Failed to create order');
+				}
+				const orderData = await orderResponse.json();
+				
+				if (paymentMethod === 'credit-card') {
+				await createStripeCheckoutSession(uniqueId, totalAmount);
+				} else if (paymentMethod === 'paypal') {
+				// Uncomment when ready to use PayPal
+				// await createPayPalOrder();
+				}
+			} catch (error) {
+				console.error(error);
 			}
-			const blob = new Blob([ab], { type: mimeString });
-			const file = new File([blob], 'image.png', { type: mimeString });
+			};
+
+			// Call function to process order
+			processOrder();
+
 	  
-			const totalAmount = checkoutData.price;
-			const backType = checkoutData.backType;
-			const size = checkoutData.size;
-			const cart = [
-			  {
-				title: 'Button',
-				orderQuantity: 1,
-				price: totalAmount,
-				originalPrice: totalAmount,
-				backType,
-				size,
-				status: 'active',
-			  },
-			];
-			console.log(cart)
-			const uniqueId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-			const newFormData = new FormData();
-			newFormData.append('orderId', uniqueId);
-			newFormData.append('email', formData.guestEmail);
-			newFormData.append('name', `${formData.firstName} ${formData.lastName}`);
-			newFormData.append('address', formData.address);
-			newFormData.append('city', formData.city);
-			newFormData.append('country', formData.country);
-			newFormData.append('contact', formData.phone);
-			newFormData.append('zipCode', formData.zipCode);
-			newFormData.append('totalAmount', totalAmount.toString());
-			newFormData.append('shippingCost', '0');
-			newFormData.append('subTotal', totalAmount.toString());
-			newFormData.append('size', checkoutData?.size);
-			newFormData.append('cart', JSON.stringify(cart));
-			newFormData.append('image', file);
-			newFormData.append('paymentMethod', paymentMethod);
-	  
-			const orderResponse = await fetch(
-			  `${process.env.NEXT_PUBLIC_API_URL}api/order/addOrder`,
-			  {
-				method: 'POST',
-				body: newFormData,
-			  }
-			);
-	  
-			if (!orderResponse.ok) {
-			  throw new Error('Failed to create order');
-			}
-	  
-			const orderData = await orderResponse.json();
-	  
-			if (paymentMethod === 'credit-card') {
-			  await createStripeCheckoutSession(uniqueId, totalAmount);
-			} else if (paymentMethod === 'paypal') {
-			  // Uncomment when ready to use PayPal
-			  // await createPayPalOrder();
-			}
 		  } catch (error) {
 			console.error('Payment error:', error);
 		  } finally {

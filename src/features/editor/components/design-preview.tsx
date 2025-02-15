@@ -29,13 +29,14 @@ const DesignPreview = () => {
     const [selectedBackgroundType, setSelectedBackgroundType] = useState<string | null>(null);
     const [sizePrice, setSizePrice] = useState<number>(0);
     const [typePrice, setTypePrice] = useState<number>(0);
+    const [productSize, setProductSize] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const savedImage = localStorage.getItem("previewImage");
         if (savedImage) {
             setImageSrc(savedImage);
-        }
+        } 
 
         const getAllProducts = async () => {
             try {
@@ -66,6 +67,7 @@ const DesignPreview = () => {
         let newPrice = (firstProductPrice?firstProductPrice:0) + typePrice + parseInt(sizeArray[1]?sizeArray[1]:"0")
         setSizePrice(parseInt(sizeArray[1]?sizeArray[1]:"0"))
         setNewPrice(newPrice)
+        setProductSize(parseInt(sizeArray[2]?sizeArray[2]:""))
     }
     function selectBacktype(event: React.ChangeEvent<HTMLInputElement>) {
         console.log(event.target.getAttribute("data-price"));
@@ -81,7 +83,8 @@ const DesignPreview = () => {
             const checkoutData = {
                 size:selectedSize,
                 price:newPrice,
-                backType:selectedBackgroundType
+                backType:selectedBackgroundType,
+                productSize:productSize
             }; 
             localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
             router.push('/checkout');
@@ -143,11 +146,11 @@ const DesignPreview = () => {
                                     <select onChange={selectSize} className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
                                         <option value="" selected hidden>Select Size</option>
 
-                                        {console.log(products[0]?.sizes)}
+                                        {console.log(products[0])}
                                     
-                                        {products[0]?.sizes?.map((size: {name:string,price:number,_id:string}) => {
+                                        {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}) => {
                                             return (
-                                                <option key={size._id} value={size.name+","+size.price}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
+                                                <option key={size._id} value={size.name+","+size.price+","+size.productSize}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
                                             );
                                         })}
                                     </select>
