@@ -131,7 +131,7 @@ const DesignPreview = () => {
                         </div>
                     </div>
                     <div className='mt-8'>
-                        <h2 className="text-lg font-semibold">Select Back Type</h2>
+                        <h2 className="text-lg font-semibold">Select Size</h2>
                         <div className="grid grid-cols-6">
                             <div className="">
                                 {loading ? (
