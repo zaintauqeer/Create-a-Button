@@ -34,13 +34,10 @@ const DesignPreview = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [quantity, setQuantity] = useState<number>(1);
     const [finalPrice, setFinalPrice] = useState<number>();
-
     useEffect(() => {
-        const savedImage = localStorage.getItem("previewImage");
-        if (savedImage) {
-            setImageSrc(savedImage);
-        } 
-
+        setImageSrc(localStorage.getItem("previewImage"));
+      
+        
         const getAllProducts = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/all`, {
@@ -99,170 +96,186 @@ const DesignPreview = () => {
                 backType:selectedBackgroundType,
                 productSize:productSize
             }; 
-            localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
+            const encryptedData = btoa(JSON.stringify(checkoutData)); // Encrypting the data
+            localStorage.setItem("checkoutData", encryptedData);
             router.push('/checkout');
         } else {
             console.error('No size selected for checkout');
             alert("Select Size")
         }
     }
-    return (
-        <>
-            <SmallNavbar/>
-            <div className='p-4 lg:px-[34px] bg-muted min-h-[calc(100vh-68px)]'>
-                <h3 className='text-2xl mb-4 mt-4 font-bold tracking-tight text-gray-900'>
-                    Your Shoping Cart
-                </h3>
-                <div className='grid md:grid-cols-12 grid-cols-1 gap-12'>
-                    <div className='md:col-span-8'>
-                        <div className="cart-box bg-white rounded-lg p-4 border">
-                            <div className="flex gap-6 items-start">
-                                <TemplateButton
-                                    className={cn("max-w-[100px]")}
-                                    imgSrc={imageSrc|| ""}
-                                />
-                                <div className='w-full'>
-                                    <h5 className='text-base font-bold'>{products[0]?.title}</h5>
-                                    <p className='text-slate-500 mb-3 text-sm'>{products[0]?.description}</p>
-                                    <div className="flex gap-3 items-center">
-                                        {loading ? (
-                                            <div className='block h-10 mt-3'>
-                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                    <p>
-                                                        <Skeleton className='h-10' count={1} />
-                                                    </p>
-                                                </SkeletonTheme>
-                                            </div>
-                                        ):
-                                            <select defaultValue={""} onChange={selectSize} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
-                                                <option value="" hidden>Select Size</option>
-                                                {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}) => {
-                                                    return (
-                                                        <option key={size._id} value={size.name+","+size.price+","+size.productSize}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
-                                                    );
-                                                })}
-                                            </select>
-                                        }
-                                        {loading ? (
-                                            <div className='block h-10 mt-3'>
-                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                    <p>
-                                                        <Skeleton className='h-10' count={1} />
-                                                    </p>
-                                                </SkeletonTheme>
-                                            </div>
-                                        ):
-                                            <select defaultValue={""} onChange={selectBacktype} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
-                                                <option value="" hidden>Choose Back Type</option>
-                                                {products[0]?.backType?.map((backType: { name: string; _id:string; image: string; price:number }) => {
-                                                    return (
-                                                        <option key={backType._id} value={`${backType.name},${backType.price?backType.price:0}`} >{backType.name} {`${backType.price?'+$'+backType.price:""}`}</option>
-                                                    );
-                                                })}
-                                            </select>
-                                        }
 
-                                        <div className="flex items-center ms-auto border rounded-lg">
-                                            <button 
-                                                onClick={reduceQuantity} 
-                                                className="px-2.5 bg-transparent py-2.5 border-none rounded-l-lg"
-                                            >
-                                                -
-                                            </button>
-                                            <input 
-                                                type="number" 
-                                                value={quantity} 
-                                                onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))} 
-                                                className="w-16 outline-none pointer-events-none text-center border-none rounded-lg" 
-                                                min="1"
-                                            />
-                                            <button 
-                                                onClick={increaseQuantity} 
-                                                className="px-2.5 bg-transparent border-none py-2.5 border rounded-r-lg"
-                                            >
-                                                +
-                                            </button>
+    if(imageSrc){
+        return (
+            <>
+                <SmallNavbar/>
+                <div className='p-4 lg:px-[34px] bg-muted min-h-[calc(100vh-68px)]'>
+                    <h3 className='text-2xl mb-4 mt-4 font-bold tracking-tight text-gray-900'>
+                        Your Shoping Cart
+                    </h3>
+                    <div className='grid md:grid-cols-12 grid-cols-1 gap-12'>
+                        <div className='md:col-span-8'>
+                            <div className="cart-box bg-white rounded-lg p-4 border">
+                                <div className="flex gap-6 items-start">
+                                    <TemplateButton
+                                        className={cn("max-w-[100px]")}
+                                        imgSrc={imageSrc|| ""}
+                                    />
+                                    <div className='w-full'>
+                                        <h5 className='text-base font-bold'>{products[0]?.title}</h5>
+                                        <p className='text-slate-500 mb-3 text-sm'>{products[0]?.description}</p>
+                                        <div className="flex gap-3 items-center">
+                                            {loading ? (
+                                                <div className='block h-10 mt-3'>
+                                                    <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                        <p>
+                                                            <Skeleton className='h-10' count={1} />
+                                                        </p>
+                                                    </SkeletonTheme>
+                                                </div>
+                                            ):
+                                                <select defaultValue={""} onChange={selectSize} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
+                                                    <option value="" hidden>Select Size</option>
+                                                    {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}) => {
+                                                        return (
+                                                            <option key={size._id} value={size.name+","+size.price+","+size.productSize}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                            }
+                                            {loading ? (
+                                                <div className='block h-10 mt-3'>
+                                                    <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                        <p>
+                                                            <Skeleton className='h-10' count={1} />
+                                                        </p>
+                                                    </SkeletonTheme>
+                                                </div>
+                                            ):
+                                                <select defaultValue={""} onChange={selectBacktype} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
+                                                    <option value="" hidden>Choose Back Type</option>
+                                                    {products[0]?.backType?.map((backType: { name: string; _id:string; image: string; price:number }) => {
+                                                        return (
+                                                            <option key={backType._id} value={`${backType.name},${backType.price?backType.price:0}`} >{backType.name} {`${backType.price?'+$'+backType.price:""}`}</option>
+                                                        );
+                                                    })}
+                                                </select>
+                                            }
+    
+                                            <div className="flex items-center ms-auto border rounded-lg">
+                                                <button 
+                                                    onClick={reduceQuantity} 
+                                                    className="px-2.5 bg-transparent py-2.5 border-none rounded-l-lg"
+                                                >
+                                                    -
+                                                </button>
+                                                <input 
+                                                    type="number" 
+                                                    value={quantity} 
+                                                    onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))} 
+                                                    className="w-16 outline-none pointer-events-none text-center border-none rounded-lg" 
+                                                    min="1"
+                                                />
+                                                <button 
+                                                    onClick={increaseQuantity} 
+                                                    className="px-2.5 bg-transparent border-none py-2.5 border rounded-r-lg"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                            <p>$ {finalPrice!==undefined?finalPrice:newPrice}</p>
                                         </div>
-
-                                        <p>$ {finalPrice!==undefined?finalPrice:newPrice}</p>
-
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className='md:col-span-4'>
-                        <div className='bg-white border p-4 rounded-lg'>
-                            <h5 className='text-base font-bold'>Order Summary</h5>
-                            <div className='flow-root text-sm'>
-                                <div className='flex items-center justify-between py-1 mt-2'>
-                                    <p className='text-gray-600'>Base price</p>
-                                    {loading ? (
-                                        <div className='h-5 w-8'>
-                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                <p>
-                                                    <Skeleton className='h-5 w-8' count={1} />
-                                                </p>
-                                            </SkeletonTheme>
-                                        </div>
-                                    ):
-                                        <p className='font-medium text-gray-900'>
-                                            $ {newPrice}
-                                        </p>
-                                    }
-                                </div>
-                                <div className='flex items-center justify-between py-1 mt-2'>
-                                    <p className='text-gray-600'>Quantity</p>
-                                    {loading ? (
-                                        <div className='h-5 w-8'>
-                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                <p>
-                                                    <Skeleton className='h-5 w-8' count={1} />
-                                                </p>
-                                            </SkeletonTheme>
-                                        </div>
-                                    ):
-                                        <p className='font-medium text-gray-900'>
-                                            {quantity}x
-                                        </p>
-                                    }
-                                </div>
-
-                                <div className='my-2 h-px bg-gray-200' />
-
-                                <div className='flex items-center justify-between py-2'>
-                                    <p className='font-semibold text-gray-900'>Order total</p>
-                                    {loading ? (
-                                        <div className='h-5 w-8'>
-                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                <p>
-                                                    <Skeleton className='h-5 w-8' count={1} />
-                                                </p>
-                                            </SkeletonTheme>
-                                        </div>
-                                    ):
-                                        <p className='font-semibold text-gray-900'>
-                                            $ {finalPrice!==undefined?finalPrice:newPrice}
-                                        </p>
-                                    }
+                        <div className='md:col-span-4'>
+                            <div className='bg-white border p-4 rounded-lg'>
+                                <h5 className='text-base font-bold'>Order Summary</h5>
+                                <div className='flow-root text-sm'>
+                                    <div className='flex items-center justify-between py-1 mt-2'>
+                                        <p className='text-gray-600'>Base price</p>
+                                        {loading ? (
+                                            <div className='h-5 w-8'>
+                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                    <p>
+                                                        <Skeleton className='h-5 w-8' count={1} />
+                                                    </p>
+                                                </SkeletonTheme>
+                                            </div>
+                                        ):
+                                            <p className='font-medium text-gray-900'>
+                                                $ {newPrice}
+                                            </p>
+                                        }
+                                    </div>
+                                    <div className='flex items-center justify-between py-1 mt-2'>
+                                        <p className='text-gray-600'>Quantity</p>
+                                        {loading ? (
+                                            <div className='h-5 w-8'>
+                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                    <p>
+                                                        <Skeleton className='h-5 w-8' count={1} />
+                                                    </p>
+                                                </SkeletonTheme>
+                                            </div>
+                                        ):
+                                            <p className='font-medium text-gray-900'>
+                                                {quantity}x
+                                            </p>
+                                        }
+                                    </div>
+                                    <div className='my-2 h-px bg-gray-200' />
+                                    <div className='flex items-center justify-between py-2'>
+                                        <p className='font-semibold text-gray-900'>Order total</p>
+                                        {loading ? (
+                                            <div className='h-5 w-8'>
+                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                    <p>
+                                                        <Skeleton className='h-5 w-8' count={1} />
+                                                    </p>
+                                                </SkeletonTheme>
+                                            </div>
+                                        ):
+                                            <p className='font-semibold text-gray-900'>
+                                                $ {finalPrice!==undefined?finalPrice:newPrice}
+                                            </p>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className='mt-8 flex justify-end pb-12'>
-                            <Button
-                                disabled={selectedBackgroundType == null || selectedSize == null}
-                                onClick={() => handleCheckout()}
-                                className='px-4 sm:px-6 lg:px-8'>
-                                Check out <ArrowRight className='h-4 w-4 ml-1.5 inline' />
-                            </Button>
+                            <div className='mt-8 flex justify-end pb-12'>
+                                <Button
+                                    disabled={selectedBackgroundType == null || selectedSize == null}
+                                    onClick={() => handleCheckout()}
+                                    className='px-4 sm:px-6 lg:px-8'>
+                                    Check out <ArrowRight className='h-4 w-4 ml-1.5 inline' />
+                                </Button>
+                            </div>
                         </div>
                     </div>
+             
                 </div>
-         
-            </div>
-        </>
-    )
+            </>
+        )
+    } 
+    else{
+        return(
+            <>
+                <SmallNavbar/>
+                <div className='p-4 lg:px-[34px] bg-muted min-h-[calc(100vh-68px)]'>
+                    <div className="text-center">
+                        <h2 className='text-4xl font-bold mb-8 mt-8'>You have no product in your cart</h2>
+                        <Button
+                            onClick={() => router.push('/')}
+                            className='px-4 sm:px-6 lg:px-8'>
+                            Design Now <ArrowRight className='h-4 w-4 ml-1.5 inline' />
+                        </Button>
+                    </div>
+                </div>
+            </>
+        )
+    }
 }
 
 export default DesignPreview
