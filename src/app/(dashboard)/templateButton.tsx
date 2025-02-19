@@ -18,7 +18,7 @@ const TemplateButton: React.FC<ButtonProps> = ({ imgSrc, className, dark = false
     >
       <img
         src={dark ? '/pin-vector.png' : '/pin-vector.png'}
-        className='pointer-events-none z-50 select-none'
+        className='pointer-events-none z-50 select-none w-full'
         alt='phone image'
       />
 

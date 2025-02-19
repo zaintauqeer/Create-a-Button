@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 // import ProductVariations from './variations';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { SmallNavbar } from './smallNavbar'
 
 interface Product {
     id: string;
@@ -31,6 +32,8 @@ const DesignPreview = () => {
     const [typePrice, setTypePrice] = useState<number>(0);
     const [productSize, setProductSize] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
+    const [quantity, setQuantity] = useState<number>(1);
+    const [finalPrice, setFinalPrice] = useState<number>();
 
     useEffect(() => {
         const savedImage = localStorage.getItem("previewImage");
@@ -60,7 +63,6 @@ const DesignPreview = () => {
     }, []);
 
     function selectSize(event: React.ChangeEvent<HTMLSelectElement>) {
-        console.log(event.target.getAttribute("data-price"))
         const size = event.target.value
         let sizeArray = size.split(",")
         setSelectedSize(sizeArray[0])
@@ -68,21 +70,32 @@ const DesignPreview = () => {
         setSizePrice(parseInt(sizeArray[1]?sizeArray[1]:"0"))
         setNewPrice(newPrice)
         setProductSize(parseInt(sizeArray[2]?sizeArray[2]:""))
+        setFinalPrice(newPrice * quantity)
     }
-    function selectBacktype(event: React.ChangeEvent<HTMLInputElement>) {
-        console.log(event.target.getAttribute("data-price"));
+    function selectBacktype(event: React.ChangeEvent<HTMLSelectElement>) {
         const type = event.target.value;
         let typeArray = type.split(",");
         setSelectedBackgroundType(typeArray[0]);
         let newPrice = (firstProductPrice ? firstProductPrice : 0) + sizePrice + parseInt(typeArray[1] ? typeArray[1] : "0");
         setTypePrice(parseInt(typeArray[1] ? typeArray[1] : "0"));
         setNewPrice(newPrice);
+        setFinalPrice(newPrice * quantity)
+    }
+    function reduceQuantity() {
+        setQuantity(quantity > 1 ? quantity - 1 : 1)
+        const updatedPrice = newPrice?newPrice * (quantity>1?quantity-1:1):newPrice;
+        setFinalPrice(updatedPrice);
+    }
+    function increaseQuantity() {
+        setQuantity(quantity + 1)
+        const updatedPrice = newPrice?newPrice * (quantity+1):newPrice;
+        setFinalPrice(updatedPrice);
     }
     function handleCheckout() {
         if (selectedSize) {
             const checkoutData = {
                 size:selectedSize,
-                price:newPrice,
+                price:finalPrice,
                 backType:selectedBackgroundType,
                 productSize:productSize
             }; 
@@ -94,114 +107,94 @@ const DesignPreview = () => {
         }
     }
     return (
-        <div className='container'>
-            <div className='pt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12'>
-                <div className='md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2'>
-                    <TemplateButton
-                        className={cn("max-w-[150px] md:max-w-full")}
-                        imgSrc={imageSrc|| ""}
-                    />
-                </div>
-
-                <div className='mt-6 sm:col-span-9 md:row-end-1'>
-                    <h3 className='text-3xl font-bold tracking-tight text-gray-900'>
-                        Your Custom Button
-                    </h3>
-                    <div className='mt-3 flex items-center gap-1.5 text-base'>
-                        <Check className='h-4 w-4 text-green-500' />
-                        In stock and ready to ship
-                    </div>
-                </div>
-
-                <div className='sm:col-span-12 md:col-span-9 text-base'>
-                    <div className='grid grid-cols-1 gap-y-8 border-b border-gray-200 py-8 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10'>
-                        <div>
-                            <p className='font-medium text-zinc-950'>Highlights</p>
-                            <ol className='mt-3 text-zinc-700 list-disc list-inside'>
-                                <li>Packaging made from recycled materials</li>
-                                <li>5-year design guarantee</li>
-                            </ol>
-                        </div>
-                        <div>
-                            <p className='font-medium text-zinc-950'>Materials</p>
-                            <ol className='mt-3 text-zinc-700 list-disc list-inside'>
-                                <li>High-quality, durable material</li>
-                                <li>Scratch- and fingerprint resistant coating</li>
-                            </ol>
-                        </div>
-                    </div>
-                    <div className='mt-8'>
-                        <h2 className="text-lg font-semibold">Select Size</h2>
-                        <div className="grid grid-cols-6">
-                            <div className="">
-                                {loading ? (
-                                    <div className='block w-full h-10'>
-                                        <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                            <p>
-                                                <Skeleton className='h-10' count={1} />
-                                            </p>
-                                        </SkeletonTheme>
-                                    </div>
-                                ):
-                                    <select onChange={selectSize} className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
-                                        <option value="" selected hidden>Select Size</option>
-
-                                        {console.log(products[0])}
-                                    
-                                        {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}) => {
-                                            return (
-                                                <option key={size._id} value={size.name+","+size.price+","+size.productSize}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
-                                            );
-                                        })}
-                                    </select>
-                                }
-                            </div>
-                        </div>
-                        <div className="mt-4">
-                            <h2 className="text-lg font-semibold">Select Back Type</h2>
-                            {loading ? (
-                                    <div className='flex w-full h-10 gap-5'>
-                                        <div className='h-10 w-10'>
-                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                <p>
-                                                    <Skeleton className='h-10 w-10' count={1} />
-                                                </p>
-                                            </SkeletonTheme>
-                                        </div>
-                                        <div className='h-10 w-10'>
-                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                                                <p>
-                                                    <Skeleton className='h-10 w-10' count={1} />
-                                                </p>
-                                            </SkeletonTheme>
-                                        </div>
-                                    </div>
-                                ):
-                            <div className="flex gap-5 mt-2 text-center items-start">
-                                    {products[0]?.backType?.map((backType: { name: string; image: string; price:number }) => (
-                                        <>
-                                            <div className="flex flex-col mt-2 text-center">
-                                                <label key={backType.name} className={`flex p-1 flex-col items-center mb-2 h-10 w-10 border-2 rounded-full ${selectedBackgroundType === backType.name ? 'border-primary shadow-lg' : 'border-cyan-950'}`}>
-                                                    <input
-                                                        type="radio"
-                                                        name="backType"
-                                                        value={`${backType.name},${backType.price?backType.price:0}`}
-                                                        className="mr-2 hidden"
-                                                        onChange={selectBacktype}
-                                                    />
-                                                    <img src={backType.image} alt={backType.name} className="h-10 w-10 rounded-full object-cover" />
-                                                </label>
-                                                <span className="text-gray-700">{backType.name}  {`${backType.price?'+$'+backType.price:""}`}</span>
+        <>
+            <SmallNavbar/>
+            <div className='p-4 lg:px-[34px] bg-muted min-h-[calc(100vh-68px)]'>
+                <h3 className='text-2xl mb-4 mt-4 font-bold tracking-tight text-gray-900'>
+                    Your Shoping Cart
+                </h3>
+                <div className='grid md:grid-cols-12 grid-cols-1 gap-12'>
+                    <div className='md:col-span-8'>
+                        <div className="cart-box bg-white rounded-lg p-4 border">
+                            <div className="flex gap-6 items-start">
+                                <TemplateButton
+                                    className={cn("max-w-[100px]")}
+                                    imgSrc={imageSrc|| ""}
+                                />
+                                <div className='w-full'>
+                                    <h5 className='text-base font-bold'>{products[0]?.title}</h5>
+                                    <p className='text-slate-500 mb-3 text-sm'>{products[0]?.description}</p>
+                                    <div className="flex gap-3 items-center">
+                                        {loading ? (
+                                            <div className='block h-10 mt-3'>
+                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                    <p>
+                                                        <Skeleton className='h-10' count={1} />
+                                                    </p>
+                                                </SkeletonTheme>
                                             </div>
-                                        </>
-                                    ))}
+                                        ):
+                                            <select defaultValue={""} onChange={selectSize} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
+                                                <option value="" hidden>Select Size</option>
+                                                {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}) => {
+                                                    return (
+                                                        <option key={size._id} value={size.name+","+size.price+","+size.productSize}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
+                                                    );
+                                                })}
+                                            </select>
+                                        }
+                                        {loading ? (
+                                            <div className='block h-10 mt-3'>
+                                                <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                    <p>
+                                                        <Skeleton className='h-10' count={1} />
+                                                    </p>
+                                                </SkeletonTheme>
+                                            </div>
+                                        ):
+                                            <select defaultValue={""} onChange={selectBacktype} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
+                                                <option value="" hidden>Choose Back Type</option>
+                                                {products[0]?.backType?.map((backType: { name: string; _id:string; image: string; price:number }) => {
+                                                    return (
+                                                        <option key={backType._id} value={`${backType.name},${backType.price?backType.price:0}`} >{backType.name} {`${backType.price?'+$'+backType.price:""}`}</option>
+                                                    );
+                                                })}
+                                            </select>
+                                        }
+
+                                        <div className="flex items-center ms-auto border rounded-lg">
+                                            <button 
+                                                onClick={reduceQuantity} 
+                                                className="px-2.5 bg-transparent py-2.5 border-none rounded-l-lg"
+                                            >
+                                                -
+                                            </button>
+                                            <input 
+                                                type="number" 
+                                                value={quantity} 
+                                                onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))} 
+                                                className="w-16 outline-none pointer-events-none text-center border-none rounded-lg" 
+                                                min="1"
+                                            />
+                                            <button 
+                                                onClick={increaseQuantity} 
+                                                className="px-2.5 bg-transparent border-none py-2.5 border rounded-r-lg"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+
+                                        <p>$ {finalPrice!==undefined?finalPrice:newPrice}</p>
+
+
+                                    </div>
+                                </div>
                             </div>
-                            }
                         </div>
                     </div>
-                    {/* <ProductVariations /> */}
-                    <div className='mt-8'>
-                        <div className='bg-gray-50 p-6 sm:rounded-lg sm:p-8'>
+                    <div className='md:col-span-4'>
+                        <div className='bg-white border p-4 rounded-lg'>
+                            <h5 className='text-base font-bold'>Order Summary</h5>
                             <div className='flow-root text-sm'>
                                 <div className='flex items-center justify-between py-1 mt-2'>
                                     <p className='text-gray-600'>Base price</p>
@@ -216,6 +209,22 @@ const DesignPreview = () => {
                                     ):
                                         <p className='font-medium text-gray-900'>
                                             $ {newPrice}
+                                        </p>
+                                    }
+                                </div>
+                                <div className='flex items-center justify-between py-1 mt-2'>
+                                    <p className='text-gray-600'>Quantity</p>
+                                    {loading ? (
+                                        <div className='h-5 w-8'>
+                                            <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                                                <p>
+                                                    <Skeleton className='h-5 w-8' count={1} />
+                                                </p>
+                                            </SkeletonTheme>
+                                        </div>
+                                    ):
+                                        <p className='font-medium text-gray-900'>
+                                            {quantity}x
                                         </p>
                                     }
                                 </div>
@@ -234,13 +243,12 @@ const DesignPreview = () => {
                                         </div>
                                     ):
                                         <p className='font-semibold text-gray-900'>
-                                            $ {newPrice}
+                                            $ {finalPrice!==undefined?finalPrice:newPrice}
                                         </p>
                                     }
                                 </div>
                             </div>
                         </div>
-                        
                         <div className='mt-8 flex justify-end pb-12'>
                             <Button
                                 disabled={selectedBackgroundType == null || selectedSize == null}
@@ -249,10 +257,11 @@ const DesignPreview = () => {
                                 Check out <ArrowRight className='h-4 w-4 ml-1.5 inline' />
                             </Button>
                         </div>
-                    </div> 
+                    </div>
                 </div>
+         
             </div>
-        </div>
+        </>
     )
 }
 
