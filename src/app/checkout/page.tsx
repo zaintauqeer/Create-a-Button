@@ -270,8 +270,6 @@ export default function CheckoutPage() {
 	  
 		  } catch (error) {
 			console.error('Payment error:', error);
-		  } finally {
-			setIsLoading(false);
 		  }
 		}
 	  };

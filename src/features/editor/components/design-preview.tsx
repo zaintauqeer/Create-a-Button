@@ -34,8 +34,20 @@ const DesignPreview = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [quantity, setQuantity] = useState<number>(1);
     const [finalPrice, setFinalPrice] = useState<number>();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getLocalStorageData = async () =>{
+		const imgData = await localStorage.getItem("previewImage");
+		if (imgData) {
+			setImageSrc(imgData);
+			setIsLoading(false);
+		} else {
+			setIsLoading(false);
+		}
+	}
+
     useEffect(() => {
-        setImageSrc(localStorage.getItem("previewImage"));
+        getLocalStorageData()
       
         
         const getAllProducts = async () => {
@@ -105,7 +117,7 @@ const DesignPreview = () => {
         }
     }
 
-    if(imageSrc){
+    if(imageSrc && isLoading==false){
         return (
             <>
                 <SmallNavbar/>
@@ -259,7 +271,7 @@ const DesignPreview = () => {
             </>
         )
     } 
-    else{
+    else if(imageSrc==null && isLoading== false){
         return(
             <>
                 <SmallNavbar/>
@@ -274,6 +286,10 @@ const DesignPreview = () => {
                     </div>
                 </div>
             </>
+        )
+    } else{
+        return(
+            <h1>Loading...</h1>
         )
     }
 }
