@@ -134,9 +134,9 @@ export default function CheckoutPage() {
 			  orderId,
 			  items: [
 				{
-				  name: 'Custom Button',
-				  price: totalAmount * 100, // Convert to cents
-				  quantity: 1,
+				  name: checkoutData.name,
+				  price: totalAmount * 100,
+				  quantity: checkoutData.quantity,
 				},
 			  ],
 			}),
@@ -215,7 +215,7 @@ export default function CheckoutPage() {
 				const cart = [
 				{
 					title: 'Button',
-					orderQuantity: 1,
+					orderQuantity: checkoutData.quantity,
 					price: totalAmount,
 					originalPrice: totalAmount,
 					backType,
@@ -422,7 +422,7 @@ export default function CheckoutPage() {
 								<div className="-my-3 divide-y divide-gray-200 dark:divide-gray-800">
 									<dl className="flex items-center justify-between gap-4 py-3">
 										<dt className="text-base font-normal text-gray-500 dark:text-gray-400">Subtotal</dt>
-										<dd className="text-base font-medium text-gray-900 dark:text-white">$ {checkoutData?.price}</dd>
+										<dd className="text-base font-medium text-gray-900 dark:text-white">$ {checkoutData?.price * checkoutData?.quantity}</dd>
 									</dl>
 									<dl className="flex items-center justify-between gap-4 py-3">
 										<dt className="text-base font-normal text-gray-500 dark:text-gray-400">Savings</dt>
@@ -430,7 +430,7 @@ export default function CheckoutPage() {
 									</dl>
 									<dl className="flex items-center justify-between gap-4 py-3">
 										<dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-										<dd className="text-base font-bold text-gray-900 dark:text-white">$ {checkoutData?.price}</dd>
+										<dd className="text-base font-bold text-gray-900 dark:text-white">$ {checkoutData?.price * checkoutData?.quantity}</dd>
 									</dl>
 								</div>
 							</div>

@@ -103,10 +103,12 @@ const DesignPreview = () => {
     function handleCheckout() {
         if (selectedSize) {
             const checkoutData = {
+                name:products[0].title,
                 size:selectedSize,
-                price:finalPrice,
+                price:newPrice,
                 backType:selectedBackgroundType,
-                productSize:productSize
+                productSize:productSize,
+                quantity:quantity
             }; 
             const encryptedData = btoa(JSON.stringify(checkoutData)); // Encrypting the data
             localStorage.setItem("checkoutData", encryptedData);
