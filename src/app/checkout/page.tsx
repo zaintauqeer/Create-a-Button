@@ -265,10 +265,8 @@ export default function CheckoutPage() {
 				console.error(error);
 			}
 			};
-
 			// Call function to process order
 			processOrder();
-
 	  
 		  } catch (error) {
 			console.error('Payment error:', error);
@@ -290,7 +288,6 @@ export default function CheckoutPage() {
 								Cart
 							</span>
 						</li>
-	
 						<li className="after:border-1 flex items-center text-primary-700 after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:text-primary-500 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
 							<span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">
 								<svg className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -299,7 +296,6 @@ export default function CheckoutPage() {
 								Checkout
 							</span>
 						</li>
-	
 						<li className="flex shrink-0 items-center">
 							<svg className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -307,12 +303,10 @@ export default function CheckoutPage() {
 							Order summary
 						</li>
 					</ol>
-	
 					<div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12 xl:gap-16">
 						<div className="min-w-0 flex-1 space-y-8">
 							<div className="space-y-4">
 								<h2 className="text-xl font-semibold text-gray-900 dark:text-white">Delivery Details</h2>
-	
 								<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 									<div>
 										<label htmlFor="firstName" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> First name </label>
@@ -321,7 +315,6 @@ export default function CheckoutPage() {
 											onChange={handleInputChange} />
 										{errors?.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
 									</div>
-	
 									<div>
 										<label htmlFor="lastName" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Last name </label>
 										<input name="lastName" type="text" id="lastName" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="Bonnie Green"
@@ -329,7 +322,6 @@ export default function CheckoutPage() {
 											onChange={handleInputChange} />
 										{errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
 									</div>
-	
 									<div>
 										<label htmlFor="guestEmail" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Your email* </label>
 										<input name="guestEmail" type="email" id="guestEmail" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="name@flowbite.com"
@@ -337,7 +329,6 @@ export default function CheckoutPage() {
 											onChange={handleInputChange} />
 										{errors.guestEmail && <p className="text-red-500 text-sm">{errors.guestEmail}</p>}
 									</div>
-	
 									<div>
 										<label htmlFor="address" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Address </label>
 										<input name="address" type="text" id="address" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="Bonnie Green"
@@ -345,7 +336,6 @@ export default function CheckoutPage() {
 											onChange={handleInputChange} />
 										{errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
 									</div>
-	
 									<div>
 										<div className="mb-2 flex items-center gap-2">
 											<label htmlFor="city" className="block text-sm font-medium text-gray-900 dark:text-white"> City* </label>
@@ -355,7 +345,6 @@ export default function CheckoutPage() {
 											onChange={handleInputChange} />
 										{errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
 									</div>
-	
 									<div>
 										<div className="mb-2 flex items-center gap-2">
 											<label htmlFor="country" className="block text-sm font-medium text-gray-900 dark:text-white"> Country* </label>
@@ -371,9 +360,6 @@ export default function CheckoutPage() {
 										</select>
 										{errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
 									</div>
-	
-	
-	
 									<div>
 										<label htmlFor="phone" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Phone Number* </label>
 										<div className="flex items-center">
@@ -386,7 +372,6 @@ export default function CheckoutPage() {
 											</div>
 										</div>
 									</div>
-	
 									<div>
 										<label htmlFor="zipCode" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Zip Code </label>
 										<input name="zipCode" type="text" id="zipCode" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="Flowbite LLC"
@@ -399,7 +384,6 @@ export default function CheckoutPage() {
 	
 							<div className="space-y-4">
 								<h3 className="text-xl font-semibold text-gray-900 dark:text-white">Payment</h3>
-	
 								<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 									<div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 dark:border-gray-700 dark:bg-gray-800">
 										<div className="flex items-start">
@@ -414,10 +398,7 @@ export default function CheckoutPage() {
 												<p id="credit-card-text" className="mt-1 text-xs font-normal text-gray-500 dark:text-gray-400">Pay with your credit card</p>
 											</div>
 										</div>
-	
-	
 									</div>
-	
 	
 									{/* <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 dark:border-gray-700 dark:bg-gray-800">
 										<div className="flex items-start">
@@ -437,9 +418,7 @@ export default function CheckoutPage() {
 									</div> */}
 								</div>
 							</div>
-	
 						</div>
-	
 						<div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md">
 							<div className="flow-root">
 								<div className="-my-3 divide-y divide-gray-200 dark:divide-gray-800">
@@ -447,14 +426,10 @@ export default function CheckoutPage() {
 										<dt className="text-base font-normal text-gray-500 dark:text-gray-400">Subtotal</dt>
 										<dd className="text-base font-medium text-gray-900 dark:text-white">$ {checkoutData?.price}</dd>
 									</dl>
-	
 									<dl className="flex items-center justify-between gap-4 py-3">
 										<dt className="text-base font-normal text-gray-500 dark:text-gray-400">Savings</dt>
 										<dd className="text-base font-medium text-green-500">0</dd>
 									</dl>
-	
-	
-	
 									<dl className="flex items-center justify-between gap-4 py-3">
 										<dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
 										<dd className="text-base font-bold text-gray-900 dark:text-white">$ {checkoutData?.price}</dd>
