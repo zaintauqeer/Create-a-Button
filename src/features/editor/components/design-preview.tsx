@@ -138,7 +138,7 @@ const DesignPreview = () => {
                                     />
                                     <div className='w-full'>
                                         <h5 className='text-base font-bold'>{products[0]?.title}</h5>
-                                        <p className='text-slate-500 mb-3 text-sm'>{products[0]?.description}</p>
+                                        <p className='text-slate-500 mb-3 text-sm '>{products[0]?.description}</p>
                                         <div className="flex gap-3 items-center flex-wrap">
                                             {loading ? (
                                                 <div className='block h-10 mt-3'>
