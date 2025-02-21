@@ -106,6 +106,7 @@ const DesignPreview = () => {
                 name:products[0].title,
                 size:selectedSize,
                 price:newPrice,
+                totalAmount:finalPrice,
                 backType:selectedBackgroundType,
                 productSize:productSize,
                 quantity:quantity

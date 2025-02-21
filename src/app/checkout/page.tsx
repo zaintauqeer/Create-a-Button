@@ -209,15 +209,16 @@ export default function CheckoutPage() {
 				const productSize: number = checkoutData.productSize;
 				const resizedBlob = await resizeImage(imageData, productSize, productSize);
 				const resizedFile = new File([resizedBlob], 'image.png', { type: 'image/png' });
-				const totalAmount: number = checkoutData.price;
+				const totalAmount: number = checkoutData.totalAmount;
+				const itemPrice: number = checkoutData.price;
 				const backType: string = checkoutData.backType;
 				const size: string = checkoutData.size;
 				const cart = [
 				{
 					title: 'Button',
 					orderQuantity: checkoutData.quantity,
-					price: totalAmount,
-					originalPrice: totalAmount,
+					price: itemPrice,
+					originalPrice: itemPrice,
 					backType,
 					size,
 					status: 'active',
@@ -256,7 +257,7 @@ export default function CheckoutPage() {
 				const orderData = await orderResponse.json();
 				
 				if (paymentMethod === 'credit-card') {
-				await createStripeCheckoutSession(uniqueId, totalAmount);
+				await createStripeCheckoutSession(uniqueId, itemPrice);
 				} else if (paymentMethod === 'paypal') {
 				// Uncomment when ready to use PayPal
 				// await createPayPalOrder();
