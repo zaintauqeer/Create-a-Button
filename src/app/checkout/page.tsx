@@ -209,8 +209,8 @@ export default function CheckoutPage() {
 				const productSize: number = checkoutData.productSize;
 				const resizedBlob = await resizeImage(imageData, productSize, productSize);
 				const resizedFile = new File([resizedBlob], 'image.png', { type: 'image/png' });
-				const totalAmount: number = checkoutData.totalAmount;
 				const itemPrice: number = checkoutData.price;
+				const totalAmount: number = checkoutData.totalAmount;
 				const backType: string = checkoutData.backType;
 				const size: string = checkoutData.size;
 				const cart = [
