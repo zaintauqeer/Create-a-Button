@@ -177,7 +177,7 @@ const DesignPreview = () => {
                                                 </select>
                                             }
     
-                                            <div className="flex items-center ms-auto border rounded-lg">
+                                            <div className="flex items-center lg:ms-auto border rounded-lg">
                                                 <button 
                                                     onClick={reduceQuantity} 
                                                     className="px-2.5 bg-transparent py-2.5 border-none rounded-l-lg"
