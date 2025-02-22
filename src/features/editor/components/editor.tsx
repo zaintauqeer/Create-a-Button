@@ -199,7 +199,7 @@ export const Editor = ({ initialData }: EditorProps) => {
             onChangeActiveTool={onChangeActiveTool}
             key={JSON.stringify(editor?.canvas.getActiveObject())}
           />
-          <div className="flex-1 h-[calc(100%-124px)] bg-muted" ref={containerRef}>
+          <div className="flex lg:h-[calc(100%-114px)] h-[calc(100%-300px)] bg-muted mb-auto" ref={containerRef}>
             <canvas ref={canvasRef} />
           </div>
           <Footer editor={editor} />

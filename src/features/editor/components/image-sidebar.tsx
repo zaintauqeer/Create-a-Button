@@ -179,7 +179,7 @@ export const ImageSidebar = ({
             {data && data.map((image) => {
               return (
                 <button
-                  onClick={() => editor?.addImage(image.urls.regular)}
+                  onClick={() => {editor?.addImage(image.urls.regular); onClose()}}
                   key={image.id}
                   className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                 >

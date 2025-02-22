@@ -39,7 +39,7 @@ export const TextSidebar = ({
         <div className="p-4 space-y-4 border-b">
           <Button
             className="w-full"
-            onClick={() => editor?.addText("Textbox")}
+            onClick={() => {editor?.addText("Textbox"); onClose()}}
           >
             Add a textbox
           </Button>
@@ -47,10 +47,7 @@ export const TextSidebar = ({
             className="w-full h-16"
             variant="secondary"
             size="lg"
-            onClick={() => editor?.addText("Heading", {
-              fontSize: 80,
-              fontWeight: 700,
-            })}
+            onClick={() => {editor?.addText("Heading", { fontSize: 80, fontWeight: 700, }); onClose()}}
           >
             <span className="text-3xl font-bold">
               Add a heading
@@ -60,10 +57,7 @@ export const TextSidebar = ({
             className="w-full h-16"
             variant="secondary"
             size="lg"
-            onClick={() => editor?.addText("Subheading", {
-              fontSize: 44,
-              fontWeight: 600,
-            })}
+            onClick={() => {editor?.addText("Subheading", { fontSize: 44, fontWeight: 600, }); onClose()}}
           >
             <span className="text-xl font-semibold">
               Add a subheading
@@ -73,9 +67,7 @@ export const TextSidebar = ({
             className="w-full h-16"
             variant="secondary"
             size="lg"
-            onClick={() => editor?.addText("Paragraph", {
-              fontSize: 32,
-            })}
+            onClick={() => {editor?.addText("Paragraph", { fontSize: 32, }); onClose()}}
           >
             Paragraph
           </Button>

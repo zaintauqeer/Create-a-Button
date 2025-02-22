@@ -186,7 +186,7 @@ export const Toolbar = ({
           </Hint>
         </div>
       )}
-      {!isText && (
+      {/* {!isText && (
         <div className="flex items-center  justify-center">
           <Hint label="Stroke color" side="bottom" sideOffset={5}>
             <div className="flex flex-col items-center">
@@ -207,8 +207,8 @@ export const Toolbar = ({
             </div>
           </Hint>
         </div>
-      )}
-      {!isText && (
+      )} */}
+      {/* {!isText && (
         <div className="flex items-center  justify-center">
           <Hint label="Stroke width" side="bottom" sideOffset={5}>
             <div className="flex flex-col items-center">
@@ -222,11 +222,11 @@ export const Toolbar = ({
               >
                 <BsBorderWidth className="lg:size-4 size-6" />
               </Button>
-              <small className="lg:hidden">Stroke Width</small>
+              <small className="lg:hidden text-center">Stroke Width</small>
             </div>
           </Hint>
         </div>
-      )}
+      )} */}
       {isText && (
         <div className="flex items-center  justify-center">
           <Hint label="Font" side="bottom" sideOffset={5}>

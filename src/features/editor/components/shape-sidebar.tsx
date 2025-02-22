@@ -39,28 +39,28 @@ export const ShapeSidebar = ({
       <ScrollArea>
         <div className="grid grid-cols-3 gap-4 p-4">
           <ShapeTool
-            onClick={() => editor?.addCircle()}
+            onClick={() => {editor?.addCircle(); onClose()}}
             icon={FaCircle}
           />
           <ShapeTool
-            onClick={() => editor?.addSoftRectangle()}
+            onClick={() => {editor?.addSoftRectangle(); onClose()}}
             icon={FaSquare}
           />
           <ShapeTool
-            onClick={() => editor?.addRectangle()}
+            onClick={() => {editor?.addRectangle(); onClose()}}
             icon={FaSquareFull}
           />
           <ShapeTool
-            onClick={() => editor?.addTriangle()}
+            onClick={() => {editor?.addTriangle(); onClose()}}
             icon={IoTriangle}
           />
           <ShapeTool
-            onClick={() => editor?.addInverseTriangle()}
+            onClick={() => {editor?.addInverseTriangle(); onClose()}}
             icon={IoTriangle}
             iconClassName="rotate-180"
           />
           <ShapeTool
-            onClick={() => editor?.addDiamond()}
+            onClick={() => {editor?.addDiamond(); onClose()}}
             icon={FaDiamond}
           />
         </div>
