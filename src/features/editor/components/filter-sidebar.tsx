@@ -28,7 +28,7 @@ export const FilterSidebar = ({
   return (
     <aside
       className={cn(
-        "bg-white lg:relative absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
+        "bg-white lg:left-[100px] absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
         activeTool === "filter" ? "visible" : "hidden",
       )}
     >

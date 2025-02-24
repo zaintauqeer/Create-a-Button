@@ -8,43 +8,41 @@ interface UseCanvasEventsProps {
   clearSelectionCallback?: () => void;
 }
 
+
+
+
 const initAligningGuidelines = (canvas: fabric.Canvas) => {
-  const aligningLineMargin = 5;
-  const aligningLineColor = "#0365c7"; // Color of the guideline
-  const aligningLineWidth = 1; // Thickness of the guideline
+  if (!canvas || !canvas.width || !canvas.height) return;
 
-  let verticalLine: fabric.Line | null = null;
-  let horizontalLine: fabric.Line | null = null;
+  const aligningLineMargin = 5; // Snap margin
+  const aligningLineColor = "#0365d7";
+  const aligningLineWidth = 1;
 
-  // Helper function to create or update a line
-  const createOrUpdateLine = (line: fabric.Line | null, x1: number, y1: number, x2: number, y2: number): fabric.Line => {
-    if (!line) {
-      const newLine = new fabric.Line([x1, y1, x2, y2], {
-        stroke: aligningLineColor,
-        strokeWidth: aligningLineWidth,
-        selectable: false,
-        evented: false,
-      });
-      canvas.add(newLine);
-      return newLine;
-    } else {
-      line.set({ x1, y1, x2, y2 });
-      line.setCoords();
-      return line;
-    }
-  };
+  let centerX = canvas.width / 2;
+  let centerY = canvas.height / 2;
 
-  // Helper function to clear the lines
-  const clearLines = () => {
-    if (verticalLine) {
-      canvas.remove(verticalLine);
-      verticalLine = null;
-    }
-    if (horizontalLine) {
-      canvas.remove(horizontalLine);
-      horizontalLine = null;
-    }
-  };
+  // Create center alignment lines
+  const verticalLine = new fabric.Line([centerX, 0, centerX, canvas.height], {
+    stroke: aligningLineColor,
+    strokeWidth: aligningLineWidth,
+    selectable: false,
+    evented: false,
+    opacity: 0, // Default faint visibility
+    excludeFromExport: true,
+  });
+
+  const horizontalLine = new fabric.Line([0, centerY, canvas.width, centerY], {
+    stroke: aligningLineColor,
+    strokeWidth: aligningLineWidth,
+    selectable: false,
+    evented: false,
+    opacity: 0, // Default faint visibility
+    excludeFromExport: true,
+  });
+
+  // Add guidelines to the canvas
+  canvas.add(verticalLine);
+  canvas.add(horizontalLine);
 
   function isInRange(value1: number, value2: number) {
     return Math.abs(value1 - value2) <= aligningLineMargin;
@@ -54,76 +52,58 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     if (!e.target) return;
 
     const activeObject = e.target;
-    const activeObjectCenter = activeObject.getCenterPoint();
-    let activeObjectLeft = activeObjectCenter.x;
-    let activeObjectTop = activeObjectCenter.y;
+    const activeCenter = activeObject.getCenterPoint();
 
-    let snapLeft: number | null = null;
-    let snapTop: number | null = null;
+    let snapX = activeCenter.x;
+    let snapY = activeCenter.y;
 
-    let verticalSnapFound = false;
-    let horizontalSnapFound = false;
+    const isVerticallyCentered = isInRange(activeCenter.x, centerX);
+    const isHorizontallyCentered = isInRange(activeCenter.y, centerY);
 
-    canvas.getObjects().forEach((obj) => {
-      if (obj === activeObject) return;
+    // Snap to center when close enough
+    if (isVerticallyCentered) snapX = centerX;
+    if (isHorizontallyCentered) snapY = centerY;
 
-      const objectCenter = obj.getCenterPoint();
-      const objectLeft = objectCenter.x;
-      const objectTop = objectCenter.y;
+    activeObject.setPositionByOrigin(new fabric.Point(snapX, snapY), "center", "center");
+    activeObject.setCoords();
 
-      // // Check for horizontal snapping
-      // if (isInRange(objectTop, activeObjectTop)) {
-      //   snapTop = objectTop;
-      // }
+    // Show guidelines when close
+    verticalLine.set({ opacity: isVerticallyCentered ? 1 : 0 });
+    horizontalLine.set({ opacity: isHorizontallyCentered ? 1 : 0 });
 
-      // // Check for vertical snapping
-      // if (isInRange(objectLeft, activeObjectLeft)) {
-      //   snapLeft = objectLeft;
-      // }
-
-      // Check for horizontal alignment
-      if (Math.abs(objectTop - activeObjectTop) <= aligningLineMargin) {
-        snapTop = objectTop;
-        horizontalSnapFound = true;
-        horizontalLine = createOrUpdateLine(horizontalLine, 0, objectTop, canvas.width || 0, objectTop);
-      }
-
-      // Check for vertical alignment
-      if (Math.abs(objectLeft - activeObjectLeft) <= aligningLineMargin) {
-        snapLeft = objectLeft;
-        verticalSnapFound = true;
-        verticalLine = createOrUpdateLine(verticalLine, objectLeft, 0, objectLeft, canvas.height || 0);
-      }
-
-    });
-
-    // Clear lines if no snapping found
-    if (!horizontalSnapFound && horizontalLine) {
-      canvas.remove(horizontalLine);
-      horizontalLine = null;
-    }
-    if (!verticalSnapFound && verticalLine) {
-      canvas.remove(verticalLine);
-      verticalLine = null;
-    }
-
-    // Apply snapping
-    if (snapLeft !== null) {
-      activeObjectLeft = snapLeft;
-    }
-    if (snapTop !== null) {
-      activeObjectTop = snapTop;
-    }
-
-    activeObject.setPositionByOrigin(
-      new fabric.Point(activeObjectLeft, activeObjectTop),
-      "center",
-      "center"
-    );
+    canvas.requestRenderAll();
   });
-  canvas.on("object:modified", clearLines);
-  canvas.on("mouse:up", clearLines);
+
+  // Hide lines when the object stops moving
+  canvas.on("mouse:up", () => {
+    verticalLine.set({ opacity: 0 });
+    horizontalLine.set({ opacity: 0 });
+    canvas.requestRenderAll();
+  });
+
+  // Ensure lines remain centered if canvas resizes
+  const updateLines = () => {
+    centerX = canvas.getWidth() / 2;
+    centerY = canvas.getHeight() / 2;
+
+    verticalLine.set({ x1: centerX, x2: centerX, y1: 0, y2: canvas.getHeight() });
+    horizontalLine.set({ x1: 0, x2: canvas.getWidth(), y1: centerY, y2: centerY });
+
+    verticalLine.setCoords();
+    horizontalLine.setCoords();
+    canvas.bringToFront(verticalLine);
+    canvas.bringToFront(horizontalLine);
+    canvas.requestRenderAll();
+  };
+
+  canvas.on("after:render", updateLines);
+  updateLines(); // Ensure correct positioning on load
 };
+
+
+
+
+
 
 
 export const useCanvasEvents = ({

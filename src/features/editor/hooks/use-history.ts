@@ -49,6 +49,16 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
     saveCallback,
   ]);
 
+  const removeGuidelines = () => {
+    if (!canvas) return;
+    canvas.getObjects().forEach((obj) => {
+      if (obj.stroke === "#0365d7" && obj.selectable === false) {
+        canvas.remove(obj);
+      }
+    });
+    canvas.renderAll();
+  };
+
   const undo = useCallback(() => {
     if (canUndo()) {
       skipSave.current = true;
@@ -60,6 +70,7 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
       );
 
       canvas?.loadFromJSON(previousState, () => {
+        removeGuidelines();
         canvas.renderAll();
         setHistoryIndex(previousIndex);
         skipSave.current = false;
@@ -78,6 +89,7 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
       );
 
       canvas?.loadFromJSON(nextState, () => {
+        removeGuidelines();
         canvas.renderAll();
         setHistoryIndex(nextIndex);
         skipSave.current = false;
