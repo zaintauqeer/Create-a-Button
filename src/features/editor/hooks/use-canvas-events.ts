@@ -8,9 +8,6 @@ interface UseCanvasEventsProps {
   clearSelectionCallback?: () => void;
 }
 
-
-
-
 const initAligningGuidelines = (canvas: fabric.Canvas) => {
   if (!canvas || !canvas.width || !canvas.height) return;
 
@@ -98,13 +95,42 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
 
   canvas.on("after:render", updateLines);
   updateLines(); // Ensure correct positioning on load
+
+  // Show rotation degree
+  const rotationDisplay = new fabric.Text("", {
+    fontSize: 20,
+    fill: "#000",
+    selectable: false,
+    evented: false,
+  });
+  canvas.add(rotationDisplay);
+  rotationDisplay.set({ opacity: 0 }); // Initially hide the rotation display
+
+  canvas.on("object:rotating", (e) => {
+    const object = e.target;
+    if (object && typeof object.angle === 'number') {
+      const objectBounds = object.getBoundingRect();
+      const displayX = objectBounds.left + objectBounds.width / 2;
+      const displayY = objectBounds.top + objectBounds.height + 10; // 10 pixels below the object
+      rotationDisplay.set({ 
+        text: `${object.angle.toFixed(1)}°`,
+        left: displayX,
+        top: displayY,
+        opacity: 1 // Show the rotation display when rotating
+      });
+      rotationDisplay.setCoords();
+      canvas.requestRenderAll();
+    } else {
+      rotationDisplay.set({ opacity: 0 }); // Hide when not rotating
+      canvas.requestRenderAll();
+    }
+  });
+
+  canvas.on("selection:cleared", () => {
+    rotationDisplay.set({ opacity: 0 }); // Hide when selection is cleared
+    canvas.requestRenderAll();
+  });
 };
-
-
-
-
-
-
 
 export const useCanvasEvents = ({
   save,
@@ -142,6 +168,7 @@ export const useCanvasEvents = ({
         canvas.off("selection:cleared");
         canvas.off("object:moving");
         canvas.off("mouse:up");
+        canvas.off("object:rotating");
       }
     };
   }, [save, canvas, clearSelectionCallback, setSelectedObjects]);

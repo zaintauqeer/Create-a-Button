@@ -58,6 +58,15 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
     });
     canvas.renderAll();
   };
+  const removeDegree = () => {
+    if (!canvas) return;
+    canvas.getObjects().forEach((obj) => {
+      if (obj.fill === "#000" && obj.selectable === false) {
+        canvas.remove(obj);
+      }
+    });
+    canvas.renderAll();
+  };
 
   const undo = useCallback(() => {
     if (canUndo()) {

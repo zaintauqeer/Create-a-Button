@@ -88,6 +88,7 @@ export const Editor = ({ initialData }: EditorProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log("sad")
     const canvas = new fabric.Canvas(canvasRef.current, {
       controlsAboveOverlay: true,
       preserveObjectStacking: true,
@@ -205,6 +206,7 @@ export const Editor = ({ initialData }: EditorProps) => {
           <Footer editor={editor} />
         </main>
       </div>
+      
     </div>
   );
 };
