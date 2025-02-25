@@ -98,22 +98,23 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
 
   // Show rotation degree
   const rotationDisplay = new fabric.Text("", {
-    fontSize: 20,
+    fontSize: 18,
     fill: "#000",
+    fontFamily: "Arial",
     selectable: false,
     evented: false,
   });
   canvas.add(rotationDisplay);
   rotationDisplay.set({ opacity: 0 }); // Initially hide the rotation display
 
-  canvas.on("object:rotating", (e) => {
+   canvas.on("object:rotating", (e) => {
     const object = e.target;
     if (object && typeof object.angle === 'number') {
       const objectBounds = object.getBoundingRect();
-      const displayX = objectBounds.left + objectBounds.width / 2;
-      const displayY = objectBounds.top + objectBounds.height + 25; // 10 pixels below the object
+      const displayX = objectBounds.left + objectBounds.width / 2 - 15;
+      const displayY = objectBounds.top + objectBounds.height + 55; // 10 pixels below the object
       rotationDisplay.set({ 
-        text: `${object.angle.toFixed(1)}°`,
+        text: `${object.angle.toFixed(0)}°`,
         left: displayX,
         top: displayY,
         opacity: 1 // Show the rotation display when rotating
@@ -126,8 +127,8 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     }
   });
 
-  canvas.on("selection:cleared", () => {
-    rotationDisplay.set({ opacity: 0 }); // Hide when selection is cleared
+  canvas.on("object:modified", () => {
+    rotationDisplay.set({ opacity: 0 }); // Hide when rotation stops
     canvas.requestRenderAll();
   });
 };

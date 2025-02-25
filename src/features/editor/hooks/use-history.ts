@@ -62,7 +62,7 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
     if (!canvas) return;
     canvas.getObjects().forEach((obj) => {
       if (obj.fill === "#000" && obj.selectable === false) {
-        canvas.remove(obj);
+        obj.set({opacity:0});
       }
     });
     canvas.renderAll();
