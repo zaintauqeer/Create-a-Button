@@ -80,6 +80,7 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
 
       canvas?.loadFromJSON(previousState, () => {
         removeGuidelines();
+        removeDegree();
         canvas.renderAll();
         setHistoryIndex(previousIndex);
         skipSave.current = false;

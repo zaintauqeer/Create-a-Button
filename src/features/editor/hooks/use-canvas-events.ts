@@ -111,7 +111,7 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     if (object && typeof object.angle === 'number') {
       const objectBounds = object.getBoundingRect();
       const displayX = objectBounds.left + objectBounds.width / 2;
-      const displayY = objectBounds.top + objectBounds.height + 10; // 10 pixels below the object
+      const displayY = objectBounds.top + objectBounds.height + 25; // 10 pixels below the object
       rotationDisplay.set({ 
         text: `${object.angle.toFixed(1)}°`,
         left: displayX,
