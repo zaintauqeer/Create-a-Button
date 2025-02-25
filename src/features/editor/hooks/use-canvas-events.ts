@@ -120,22 +120,22 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
       const objectBounds = object.getBoundingRect();
       const displayX = objectBounds.left + objectBounds.width / 2 - 15;
       const displayY = objectBounds.top + objectBounds.height + 55; // 10 pixels below the object
-      rotationDisplay.set({ 
+      rotationDisplay?.set({ 
         text: `${object.angle.toFixed(0)}°`,
         left: displayX,
         top: displayY,
         opacity: 1 // Show the rotation display when rotating
       } as Partial<fabric.Object>); // Type assertion to fix the lint error
-      rotationDisplay.setCoords();
+      rotationDisplay?.setCoords();
       canvas.requestRenderAll();
     } else {
-      rotationDisplay.set({ opacity: 0 }); // Hide when not rotating
+      rotationDisplay?.set({ opacity: 0 }); // Hide when not rotating
       canvas.requestRenderAll();
     }
   });
 
-  canvas.on("selection:cleared", () => {
-    rotationDisplay?.set({ opacity: 0 }); // Hide when selection is cleared
+  canvas.on("object:modified", () => {
+    rotationDisplay?.set({ opacity: 0 }); // Hide when rotation stops
     canvas.requestRenderAll();
   });
 };
