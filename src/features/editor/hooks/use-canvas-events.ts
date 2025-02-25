@@ -97,17 +97,24 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
   updateLines(); // Ensure correct positioning on load
 
   // Show rotation degree
-  const rotationDisplay = new fabric.Text("", {
-    fontSize: 18,
-    fill: "#000",
-    fontFamily: "Arial",
-    selectable: false,
-    evented: false,
+  let rotationDisplay: fabric.Object | undefined
+  canvas.on("selection:created", (e) => {
+    rotationDisplay = canvas.getObjects().find(obj => obj.type === 'text' && obj.fill === '#000');
+    if (!rotationDisplay) {
+      rotationDisplay = new fabric.Text("", {
+        fontSize: 18,
+        fill: "#000",
+        fontFamily: "Arial",
+        selectable: false,
+        evented: false,
+      });
+      canvas.add(rotationDisplay);
+      rotationDisplay.set({ opacity: 0 }); // Initially hide the rotation display
+    }
   });
-  canvas.add(rotationDisplay);
-  rotationDisplay.set({ opacity: 0 }); // Initially hide the rotation display
 
-   canvas.on("object:rotating", (e) => {
+  
+  canvas.on("object:rotating", (e) => {
     const object = e.target;
     if (object && typeof object.angle === 'number') {
       const objectBounds = object.getBoundingRect();
@@ -118,7 +125,7 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
         left: displayX,
         top: displayY,
         opacity: 1 // Show the rotation display when rotating
-      });
+      } as Partial<fabric.Object>); // Type assertion to fix the lint error
       rotationDisplay.setCoords();
       canvas.requestRenderAll();
     } else {
@@ -127,8 +134,8 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     }
   });
 
-  canvas.on("object:modified", () => {
-    rotationDisplay.set({ opacity: 0 }); // Hide when rotation stops
+  canvas.on("selection:cleared", () => {
+    rotationDisplay?.set({ opacity: 0 }); // Hide when selection is cleared
     canvas.requestRenderAll();
   });
 };
