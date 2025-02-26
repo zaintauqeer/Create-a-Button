@@ -129,7 +129,7 @@ const handleAddToCart = () => {
 };
 
   return (
-    <nav className="w-full flex items-center p-4 h-[68px] gap-x-7 border-b lg:pl-[34px]">
+    <nav className="w-full flex items-center p-4 h-[68px] lg:gap-x-7 gap-x-2 border-b lg:pl-[34px]">
       <Logo />
       <div className="w-full flex items-center gap-x-1 h-full">
         {/* <DropdownMenu modal={false}>
@@ -154,8 +154,8 @@ const handleAddToCart = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu> */}
-        <Separator orientation="vertical" className="mx-2" />
-        <Hint label="Select" side="bottom" sideOffset={10}>
+        <Separator orientation="vertical" className="mx-1" />
+        {/* <Hint label="Select" side="bottom" sideOffset={10}>
           <Button
             variant="ghost"
             size="icon"
@@ -164,7 +164,7 @@ const handleAddToCart = () => {
           >
             <MousePointerClick className="size-4" />
           </Button>
-        </Hint>
+        </Hint> */}
         <Hint label="Undo" side="bottom" sideOffset={10}>
           <Button
             disabled={!editor?.canUndo()}
@@ -185,7 +185,7 @@ const handleAddToCart = () => {
             <Redo2 className="size-4" />
           </Button>
         </Hint>
-        <Separator orientation="vertical" className="mx-2" />
+        <Separator orientation="vertical" className="mx-1" />
         {/* {isPending && ( 
           <div className="flex items-center gap-x-2">
             <Loader className="size-4 animate-spin text-muted-foreground" />
@@ -288,7 +288,7 @@ const handleAddToCart = () => {
               </select>
           }
           <Button onClick={handleAddToCart} disabled={isDisable}>
-                Add to cart ($ {newPrice})
+                Buy ($ {newPrice})
           </Button>
           <UserButton />
         </div>
