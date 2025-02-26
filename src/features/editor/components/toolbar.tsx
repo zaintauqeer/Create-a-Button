@@ -161,49 +161,7 @@ export const Toolbar = ({
     return (
       <>
         <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2" >
-          <small>Choose Size:</small>
-          <div className="flex items-center  justify-center">
-            <Hint label="1 Inch" side="bottom" sideOffset={5}>
-              <div className="flex flex-col items-center">
-                <button
-                  className="flex items-center"
-                  onClick={() => editor?.sendBackwards()}
-                >
-                  <Circle className="lg:size-4 size-6" />
-                  <small className="ms-1">1″</small>
-                </button>
-                <small className="lg:hidden">1 Inch</small>
-              </div>
-            </Hint>
-          </div>
-          <div className="flex items-center  justify-center">
-            <Hint label="2 1/2 Inch" side="bottom" sideOffset={5}>
-              <div className="flex flex-col items-center">
-                <button
-                  className="flex items-center"
-                  onClick={() => editor?.sendBackwards()}
-                >
-                  <Circle className="lg:size-4 size-6" />
-                  <small className="ms-1">2.5″</small>
-                </button>
-                <small className="lg:hidden">2 1/2 Inch</small>
-              </div>
-            </Hint>
-          </div>
-          <div className="flex items-center  justify-center">
-            <Hint label="3 1/2 Inch" side="bottom" sideOffset={5}>
-              <div className="flex flex-col items-center">
-                <button
-                  className="flex items-center"
-                  onClick={() => editor?.sendBackwards()}
-                >
-                  <Circle className="lg:size-4 size-6" />
-                  <small className="ms-1">3.5″</small>
-                </button>
-                <small className="lg:hidden">3 1/2 Inch</small>
-              </div>
-            </Hint>
-          </div>
+         
         </div>
       </>
     );

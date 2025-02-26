@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 interface NavbarProps {
   id: string;
@@ -269,12 +270,11 @@ const handleAddToCart = () => {
           
             </DropdownMenuContent>
           </DropdownMenu> */}
+              
           {loading ? (
-              <div className='block h-10 mt-3 w-10'>
-                  <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
-                      <p>
-                          <Skeleton className='h-10 w-10' count={1} />
-                      </p>
+              <div className='block h-10  w-14'>
+                  <SkeletonTheme  baseColor="#eef" highlightColor="#fff">
+                          <Skeleton className='h-10 w-14' count={1} />
                   </SkeletonTheme>
               </div>
           ):
