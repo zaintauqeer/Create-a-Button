@@ -288,7 +288,7 @@ const handleAddToCart = () => {
               </select>
           }
           <Button onClick={handleAddToCart} disabled={isDisable}>
-                Buy ($ {newPrice})
+                Buy (${newPrice})
           </Button>
           <UserButton />
         </div>
