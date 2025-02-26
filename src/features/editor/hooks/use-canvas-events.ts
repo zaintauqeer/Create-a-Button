@@ -98,9 +98,18 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
 
   // Show rotation degree
   let rotationDisplay: fabric.Object | undefined
+  rotationDisplay = new fabric.Text("", {
+    fontSize: 18,
+    fill: "#000",
+    fontFamily: "Arial",
+    selectable: false,
+    evented: false,
+  });
+  canvas.add(rotationDisplay);
+  rotationDisplay.set({ opacity: 0 }); // Initially hide the rotation display
   canvas.on("selection:created", (e) => {
-    rotationDisplay = canvas.getObjects().find(obj => obj.type === 'text' && obj.fill === '#000');
-    if (!rotationDisplay) {
+    let checkRotationDisplay = canvas.getObjects().find(obj => obj.type === 'text' && obj.fill === '#000');
+    if (!checkRotationDisplay) {
       rotationDisplay = new fabric.Text("", {
         fontSize: 18,
         fill: "#000",
