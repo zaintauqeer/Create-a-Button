@@ -272,9 +272,9 @@ const handleAddToCart = () => {
           </DropdownMenu> */}
               
           {loading ? (
-              <div className='block h-10  w-14'>
+              <div className='block h-8 w-24'>
                   <SkeletonTheme  baseColor="#eef" highlightColor="#fff">
-                          <Skeleton className='h-10 w-14' count={1} />
+                          <Skeleton className='h-8 w-24' count={1} />
                   </SkeletonTheme>
               </div>
           ):
