@@ -34,13 +34,15 @@ const DesignPreview = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [quantity, setQuantity] = useState<number>(1);
     const [finalPrice, setFinalPrice] = useState<number>();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const getLocalStorageData = async () =>{
 		const imgData = await localStorage.getItem("previewImage");
+		
 		if (imgData) {
 			setImageSrc(imgData);
 			setIsLoading(false);
+
 		} else {
 			setIsLoading(false);
 		}
@@ -48,8 +50,6 @@ const DesignPreview = () => {
 
     useEffect(() => {
         getLocalStorageData()
-      
-        
         const getAllProducts = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/all`, {
@@ -61,8 +61,18 @@ const DesignPreview = () => {
                 const data = await response.json();
                 setProducts(data.data);
                 setfirstProductPrice(data.data[0].price)
-                setNewPrice(data.data[0].price)
-                setLoading(false)
+                const urlParams = new URLSearchParams(window.location.search);
+		        const sizeParam = urlParams.get('size');
+                if (sizeParam && data.data[0].sizes[sizeParam]) {
+                    console.log(sizeParam);
+                    let newPrice = data.data[0].price + parseInt(data.data[0].sizes[sizeParam].price);
+                    setNewPrice(newPrice);
+                    setSizePrice(parseInt(data.data[0].sizes[sizeParam].price));
+                    setProductSize(data.data[0].sizes[sizeParam].productSize);
+                } else {
+                    console.warn('Size parameter is invalid or not found');
+                }
+                setLoading(false);
             } catch (error) {
                 console.error('Failed to fetch products:', error);
             }
@@ -140,7 +150,7 @@ const DesignPreview = () => {
                                         <h5 className='text-base font-bold'>{products[0]?.title}</h5>
                                         <p className='text-slate-500 mb-3 text-sm '>{products[0]?.description}</p>
                                         <div className="flex gap-3 items-center flex-wrap">
-                                            {loading ? (
+                                            {/* {loading ? (
                                                 <div className='block h-10 mt-3'>
                                                     <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
                                                         <p>
@@ -157,7 +167,7 @@ const DesignPreview = () => {
                                                         );
                                                     })}
                                                 </select>
-                                            }
+                                            } */}
                                             {loading ? (
                                                 <div className='block h-10 mt-3'>
                                                     <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">

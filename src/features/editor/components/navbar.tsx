@@ -32,6 +32,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEffect, useState } from "react";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 interface NavbarProps {
   id: string;
@@ -46,6 +48,16 @@ export const Navbar = ({
   activeTool,
   onChangeActiveTool,
 }: NavbarProps) => {
+
+
+  const [products, setProducts] = useState<any[]>([]);
+  const [firstProductPrice, setfirstProductPrice] = useState<number>();
+  const [newPrice, setNewPrice] = useState<number>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isDisable, setIsDisable] = useState<boolean>(true);
+  const [sizeIndex, setSizeIndex] = useState<string>();
+
+
   const router = useRouter();
   const data = useMutationState({
     filters: {
@@ -74,13 +86,46 @@ export const Navbar = ({
     },
   });
 
-  const handleAddToCart = () => {
-    if (editor) {
-      // Export the image as a data URL (base64)
-      editor?.savePreview();
-      router.push("/editor/preview");
-    }
-  };
+  
+
+  useEffect(() => {
+    const getAllProducts = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/all`, {
+                method: 'GET',
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log(data)
+            setProducts(data.data);
+            setfirstProductPrice(data.data[0].price)
+            setNewPrice(data.data[0].price)
+            setLoading(false)
+        } catch (error) {
+            console.error('Failed to fetch products:', error);
+        }
+    };
+
+    getAllProducts();
+}, []);
+
+function selectSize(event: React.ChangeEvent<HTMLSelectElement>) {
+  const size = event.target.value
+  setSizeIndex(size)
+  let newPrice = (firstProductPrice?firstProductPrice:0) + products[0].sizes[size].price
+  setNewPrice(newPrice)
+  setIsDisable(false)
+}
+
+const handleAddToCart = () => {
+  if (editor) {
+    // Export the image as a data URL (base64)
+    editor?.savePreview();
+    router.push(`/editor/preview?size=${sizeIndex}`);
+  }
+};
 
   return (
     <nav className="w-full flex items-center p-4 h-[68px] gap-x-7 border-b lg:pl-[34px]">
@@ -224,8 +269,26 @@ export const Navbar = ({
           
             </DropdownMenuContent>
           </DropdownMenu> */}
-          <Button onClick={handleAddToCart}>
-                Add to cart
+          {loading ? (
+              <div className='block h-10 mt-3 w-10'>
+                  <SkeletonTheme  baseColor="#eef" highlightColor="#C0C0C0">
+                      <p>
+                          <Skeleton className='h-10 w-10' count={1} />
+                      </p>
+                  </SkeletonTheme>
+              </div>
+          ):
+              <select defaultValue={""} onChange={selectSize} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
+                  <option value="" hidden>Select Size</option>
+                  {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}, index:number) => {
+                      return (
+                          <option key={size._id} value={index}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
+                      );
+                  })}
+              </select>
+          }
+          <Button onClick={handleAddToCart} disabled={isDisable}>
+                Add to cart ($ {newPrice})
           </Button>
           <UserButton />
         </div>

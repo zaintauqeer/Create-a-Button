@@ -1,34 +1,35 @@
 import { useState } from "react";
 
-import { 
-  FaBold, 
-  FaItalic, 
-  FaStrikethrough, 
+import {
+  FaBold,
+  FaItalic,
+  FaStrikethrough,
   FaUnderline
 } from "react-icons/fa";
 import { TbColorFilter } from "react-icons/tb";
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
-import { 
-  ArrowUp, 
-  ArrowDown, 
-  ChevronDown, 
-  AlignLeft, 
-  AlignCenter, 
+import {
+  ArrowUp,
+  ArrowDown,
+  ChevronDown,
+  AlignLeft,
+  AlignCenter,
   AlignRight,
   Trash,
   ALargeSmall,
   SquareSplitHorizontal,
-  
-  Copy
+
+  Copy,
+  Circle
 } from "lucide-react";
 
 import { isTextType } from "@/features/editor/utils";
 import { FontSizeInput } from "@/features/editor/components/font-size-input";
-import { 
-  ActiveTool, 
-  Editor, 
-  FONT_SIZE, 
+import {
+  ActiveTool,
+  Editor,
+  FONT_SIZE,
   FONT_WEIGHT
 } from "@/features/editor/types";
 
@@ -158,7 +159,53 @@ export const Toolbar = ({
 
   if (editor?.selectedObjects.length === 0) {
     return (
-      <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2" />
+      <>
+        <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2" >
+          <small>Choose Size:</small>
+          <div className="flex items-center  justify-center">
+            <Hint label="1 Inch" side="bottom" sideOffset={5}>
+              <div className="flex flex-col items-center">
+                <button
+                  className="flex items-center"
+                  onClick={() => editor?.sendBackwards()}
+                >
+                  <Circle className="lg:size-4 size-6" />
+                  <small className="ms-1">1″</small>
+                </button>
+                <small className="lg:hidden">1 Inch</small>
+              </div>
+            </Hint>
+          </div>
+          <div className="flex items-center  justify-center">
+            <Hint label="2 1/2 Inch" side="bottom" sideOffset={5}>
+              <div className="flex flex-col items-center">
+                <button
+                  className="flex items-center"
+                  onClick={() => editor?.sendBackwards()}
+                >
+                  <Circle className="lg:size-4 size-6" />
+                  <small className="ms-1">2.5″</small>
+                </button>
+                <small className="lg:hidden">2 1/2 Inch</small>
+              </div>
+            </Hint>
+          </div>
+          <div className="flex items-center  justify-center">
+            <Hint label="3 1/2 Inch" side="bottom" sideOffset={5}>
+              <div className="flex flex-col items-center">
+                <button
+                  className="flex items-center"
+                  onClick={() => editor?.sendBackwards()}
+                >
+                  <Circle className="lg:size-4 size-6" />
+                  <small className="ms-1">3.5″</small>
+                </button>
+                <small className="lg:hidden">3 1/2 Inch</small>
+              </div>
+            </Hint>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -168,7 +215,7 @@ export const Toolbar = ({
         <div className="flex items-center  justify-center">
           <Hint label="Color" side="bottom" sideOffset={5}>
             <div className="flex flex-col items-center">
-              <Button 
+              <Button
                 onClick={() => onChangeActiveTool("fill")}
                 size="icon"
                 variant="ghost"
@@ -401,7 +448,7 @@ export const Toolbar = ({
               <small className="lg:hidden">Font Size</small>
             </div>
           </Hint>
-         {/* <FontSizeInput
+          {/* <FontSizeInput
             value={properties.fontSize}
             onChange={onChangeFontSize}
          /> */}
