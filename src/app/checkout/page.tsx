@@ -159,44 +159,54 @@ export default function CheckoutPage() {
 		  try {
 			const imageData = localStorage.getItem('previewImage');
 			if (!imageData) {
-			throw new Error('No image data found in local storage');
+			  throw new Error('No image data found in local storage');
 			}
+	  
+			const byteString = atob(imageData.split(',')[1]);
+			const mimeString = imageData.split(',')[0].split(':')[1].split(';')[0];
+			const ab = new ArrayBuffer(byteString.length);
+			const ia = new Uint8Array(ab);
+			for (let i = 0; i < byteString.length; i++) {
+			  ia[i] = byteString.charCodeAt(i);
+			}
+			const blob = new Blob([ab], { type: mimeString });
+			const file = new File([blob], 'image.png', { type: mimeString });
 
-			const resizeImage = (imageData: string, width: number, height: number): Promise<Blob> => {
-			return new Promise((resolve, reject) => {
-				const img = new Image();
-				img.onload = () => {
-				const canvas = document.createElement('canvas');
-				canvas.width = width;
-				canvas.height = height;
-				const ctx = canvas.getContext('2d');
+			// const resizeImage = (imageData: string, width: number, height: number): Promise<Blob> => {
+			// 	return new Promise((resolve, reject) => {
+			// 		const img = new Image();
+			// 		img.onload = () => {
+			// 		const canvas = document.createElement('canvas');
+			// 		canvas.width = width;
+			// 		canvas.height = height;
+			// 		const ctx = canvas.getContext('2d');
 
-				if (!ctx) {
-					reject(new Error('Canvas context is not supported'));
-					return;
-				}
+			// 		if (!ctx) {
+			// 			reject(new Error('Canvas context is not supported'));
+			// 			return;
+			// 		}
 
-				// Draw the image with new dimensions
-				ctx.drawImage(img, 0, 0, width, height);
+			// 		// Draw the image with new dimensions
+			// 		ctx.drawImage(img, 0, 0, width, height);
 
-				// Convert canvas to Blob
-				canvas.toBlob(
-					(blob) => {
-					if (blob) {
-						resolve(blob);
-					} else {
-						reject(new Error('Image resizing failed'));
-					}
-					},
-					'image/png', // Change format if needed
-					1 // Quality (1 = best quality)
-				);
-				};
+			// 		// Convert canvas to Blob
+			// 		canvas.toBlob(
+			// 			(blob) => {
+			// 			if (blob) {
+			// 				resolve(blob);
+			// 			} else {
+			// 				reject(new Error('Image resizing failed'));
+			// 			}
+			// 			},
+			// 			'image/png', // Change format if needed
+			// 			1 // Quality (1 = best quality)
+			// 		);
+			// 		};
 
-				img.onerror = () => reject(new Error('Failed to load image'));
-				img.src = imageData; // Load the image
-			});
-			};
+			// 		img.onerror = () => reject(new Error('Failed to load image'));
+			// 		img.src = imageData; // Load the image
+			// 	});
+			// };
 
 			const processOrder = async () => {
 			try {
@@ -207,8 +217,8 @@ export default function CheckoutPage() {
 				}
 				
 				const productSize: number = checkoutData.productSize;
-				const resizedBlob = await resizeImage(imageData, productSize, productSize);
-				const resizedFile = new File([resizedBlob], 'image.png', { type: 'image/png' });
+				// const resizedBlob = await resizeImage(imageData, productSize, productSize);
+				// const resizedFile = new File([resizedBlob], 'image.png', { type: 'image/png' });
 				const itemPrice: number = checkoutData.price;
 				const totalAmount: number = checkoutData.totalAmount;
 				const backType: string = checkoutData.backType;
@@ -222,6 +232,7 @@ export default function CheckoutPage() {
 					backType,
 					size,
 					status: 'active',
+					productSize,
 				},
 				];
 
@@ -240,7 +251,7 @@ export default function CheckoutPage() {
 				newFormData.append('subTotal', totalAmount.toString());
 				newFormData.append('size', checkoutData?.size);
 				newFormData.append('cart', JSON.stringify(cart));
-				newFormData.append('image', resizedFile);
+				newFormData.append('image', file);
 				newFormData.append('paymentMethod', paymentMethod);
 
 				const orderResponse = await fetch(
