@@ -216,7 +216,7 @@ export default function CheckoutPage() {
 					throw new Error('Missing checkout or form data');
 				}
 				
-				const productSize: number = checkoutData.productSize;
+				const productSize: number = parseInt(checkoutData.productSize)
 				// const resizedBlob = await resizeImage(imageData, productSize, productSize);
 				// const resizedFile = new File([resizedBlob], 'image.png', { type: 'image/png' });
 				const itemPrice: number = checkoutData.price;
