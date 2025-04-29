@@ -72,7 +72,9 @@ export const TemplatesSection = () => {
   }
 
   if (!data?.length) {
-    return null;
+    return  <h3 className="font-semibold text-lg">
+    Start from a template
+  </h3>;
   }
 
   return (

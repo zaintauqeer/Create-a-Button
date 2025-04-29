@@ -34,25 +34,22 @@ export const TemplateSidebar = ({
     "You are about to replace the current project with this template."
   )
 
-  const { data, isLoading, isError } = useGetTemplates({
-    limit: "20",
-    page: "1",
-  });
+  const { data, isLoading, isError } = useGetTemplates();
+
+  
 
   const onClose = () => {
     onChangeActiveTool("select");
   };
 
   const onClick = async (template: ResponseType["data"][0]) => {
-    if (template.isPro && shouldBlock) {
-      triggerPaywall();
-      return;
-    }
+ 
 
     const ok = await confirm();
 
     if (ok) {
-      editor?.loadJson(template.json);
+      console.log("template",template.templateJson)
+      editor?.loadJson(template.templateJson);
     }
   };
 
@@ -84,12 +81,9 @@ export const TemplateSidebar = ({
       <ScrollArea>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            {data && data.map((template) => {
+            {data && data.map((template: ResponseType["data"][0]) => {
               return (
                 <button
-                  style={{ 
-                    aspectRatio: `${template.width}/${template.height}`
-                  }}
                   onClick={() => onClick(template)}
                   key={template.id}
                   className="relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
@@ -100,11 +94,11 @@ export const TemplateSidebar = ({
                     alt={template.name || "Template"}
                     className="object-cover"
                   />
-                  {template.isPro && (
+                  {/* {template.isPro && (
                     <div className="absolute top-2 right-2 size-8 items-center flex justify-center bg-black/50 rounded-full">
                       <Crown className="size-4 fill-yellow-500 text-yellow-500" />
                     </div>
-                  )}
+                  )} */}
                   <div
                     className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left"
                   >

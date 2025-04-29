@@ -25,12 +25,12 @@ export const Sidebar = ({
   return (
     <aside className="bg-white flex flex-col lg:w-[100px] w-full lg:h-full h-[80px] border-r overflow-y-auto">
       <ul className="flex lg:flex-col">
-        {/* <SidebarItem
+        <SidebarItem
           icon={LayoutTemplate}
           label="Design"
           isActive={activeTool === "templates"}
           onClick={() => onChangeActiveTool("templates")}
-        /> */}
+        />
         <SidebarItem
           icon={ImageIcon}
           label="Image"

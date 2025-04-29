@@ -10,7 +10,7 @@ import { projects, projectsInsertSchema } from "@/db/schema";
 const app = new Hono()
   .get(
     "/templates",
-    verifyAuth(),
+    // verifyAuth(),
     zValidator(
       "query",
       z.object({
@@ -37,7 +37,7 @@ const app = new Hono()
   )
   .delete(
     "/:id",
-    verifyAuth(),
+    // verifyAuth(),
     zValidator("param", z.object({ id: z.string() })),
     async (c) => {
       const auth = c.get("authUser");
@@ -66,7 +66,7 @@ const app = new Hono()
   )
   .post(
     "/:id/duplicate",
-    verifyAuth(),
+    // verifyAuth(),
     zValidator("param", z.object({ id: z.string() })),
     async (c) => {
       const auth = c.get("authUser");
@@ -110,7 +110,7 @@ const app = new Hono()
   )
   .get(
     "/",
-    verifyAuth(),
+    // verifyAuth(),
     zValidator(
       "query",
       z.object({
