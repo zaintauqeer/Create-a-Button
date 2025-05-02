@@ -15,67 +15,67 @@ export const TemplatesSection = () => {
   const router = useRouter();
   const mutation = useCreateProject();
 
-  const { 
-    data, 
-    isLoading, 
-    isError
-  } = useGetTemplates({ page: "1", limit: "4" });
+  // const { 
+  //   data, 
+  //   isLoading, 
+  //   isError
+  // } = useGetTemplates({ page: "1", limit: "4" });
 
-  const onClick = (template: ResponseType["data"][0]) => {
-    if (template.isPro && shouldBlock) {
-      triggerPaywall();
-      return;
-    }
+  // const onClick = (template: ResponseType["data"][0]) => {
+  //   if (template.isPro && shouldBlock) {
+  //     triggerPaywall();
+  //     return;
+  //   }
 
-    mutation.mutate(
-      {
-        name: `${template.name} project`,
-        json: template.json,
-        width: template.width,
-        height: template.height,
-      },
-      {
-        onSuccess: ({ data }) => {
-          router.push(`/editor/${data.id}`);
-        },
-      },
-    );
-  };
+  //   mutation.mutate(
+  //     {
+  //       name: `${template.name} project`,
+  //       json: template.json,
+  //       width: template.width,
+  //       height: template.height,
+  //     },
+  //     {
+  //       onSuccess: ({ data }) => {
+  //         router.push(`/editor/${data.id}`);
+  //       },
+  //     },
+  //   );
+  // };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <h3 className="font-semibold text-lg">
-          Start from a template
-        </h3>
-        <div className="flex items-center justify-center h-32">
-          <Loader className="size-6 text-muted-foreground animate-spin" />
-        </div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="space-y-4">
+  //       <h3 className="font-semibold text-lg">
+  //         Start from a template
+  //       </h3>
+  //       <div className="flex items-center justify-center h-32">
+  //         <Loader className="size-6 text-muted-foreground animate-spin" />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <div className="space-y-4">
-        <h3 className="font-semibold text-lg">
-          Start from a template
-        </h3>
-        <div className="flex flex-col gap-y-4 items-center justify-center h-32">
-          <TriangleAlert className="size-6 text-muted-foreground" />
-          <p>
-            Failed to load templates
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <div className="space-y-4">
+  //       <h3 className="font-semibold text-lg">
+  //         Start from a template
+  //       </h3>
+  //       <div className="flex flex-col gap-y-4 items-center justify-center h-32">
+  //         <TriangleAlert className="size-6 text-muted-foreground" />
+  //         <p>
+  //           Failed to load templates
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (!data?.length) {
-    return  <h3 className="font-semibold text-lg">
-    Start from a template
-  </h3>;
-  }
+  // if (!data?.length) {
+  //   return  <h3 className="font-semibold text-lg">
+  //   Start from a template
+  // </h3>;
+  // }
 
   return (
     <div>
@@ -83,7 +83,7 @@ export const TemplatesSection = () => {
         Start from a template
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 mt-4 gap-4">
-        {data?.map((template) => (
+        {/* {data?.map((template) => (
           <TemplateCard
             key={template.id}
             title={template.name}
@@ -95,7 +95,7 @@ export const TemplatesSection = () => {
             height={template.height}
             isPro={template.isPro}
           />
-        ))}
+        ))} */}
       </div>
     </div>
   );
