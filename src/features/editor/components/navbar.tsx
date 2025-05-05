@@ -129,9 +129,9 @@ const handleAddToCart = () => {
 };
 
   return (
-    <nav className="w-full flex items-center p-4 h-[68px] lg:gap-x-7 gap-x-2 border-b lg:pl-[34px]">
+    <nav className="w-full flex items-center p-4 lg:h-[68px] h-[100px] lg:gap-x-7 gap-x-5 border-b lg:pl-[34px]">
       <Logo />
-      <div className="w-full flex items-center gap-x-1 h-full z-[90]">
+      <div className="lg:w-full flex flex-wrap items-center gap-x-1 ms-auto lg:ms-0 z-[90]">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="ghost">
@@ -186,35 +186,10 @@ const handleAddToCart = () => {
           </Button>
         </Hint>
         <Separator orientation="vertical" className="mx-1" />
-        {/* {isPending && ( 
-          <div className="flex items-center gap-x-2">
-            <Loader className="size-4 animate-spin text-muted-foreground" />
-            <div className="text-xs text-muted-foreground">
-              Saving...
-            </div>
-          </div>
-        )}
-        {!isPending && isError && ( 
-          <div className="flex items-center gap-x-2">
-            <BsCloudSlash className="size-[20px] text-muted-foreground" />
-            <div className="text-xs text-muted-foreground">
-              Failed to save
-            </div>
-          </div>
-        )}
-        {!isPending && !isError && ( 
-          <div className="flex items-center gap-x-2">
-            <BsCloudCheck className="size-[20px] text-muted-foreground" />
-            <div className="text-xs text-muted-foreground">
-              Saved
-            </div>
-          </div>
-        )} */}
-        <div className="ml-auto flex items-center gap-x-4">
-          <DropdownMenu modal={false}>
+        <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="ghost">
-                Export
+                <span className="lg:block hidden">Export</span>
                 <Download className="size-4 ml-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -270,6 +245,32 @@ const handleAddToCart = () => {
           
             </DropdownMenuContent>
           </DropdownMenu>
+        {/* {isPending && ( 
+          <div className="flex items-center gap-x-2">
+            <Loader className="size-4 animate-spin text-muted-foreground" />
+            <div className="text-xs text-muted-foreground">
+              Saving...
+            </div>
+          </div>
+        )}
+        {!isPending && isError && ( 
+          <div className="flex items-center gap-x-2">
+            <BsCloudSlash className="size-[20px] text-muted-foreground" />
+            <div className="text-xs text-muted-foreground">
+              Failed to save
+            </div>
+          </div>
+        )}
+        {!isPending && !isError && ( 
+          <div className="flex items-center gap-x-2">
+            <BsCloudCheck className="size-[20px] text-muted-foreground" />
+            <div className="text-xs text-muted-foreground">
+              Saved
+            </div>
+          </div>
+        )} */}
+        <div className="lg:ml-auto flex items-center gap-x-4">
+          
               
           {loading ? (
               <div className='block h-8 w-24'>

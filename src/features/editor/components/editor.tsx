@@ -112,7 +112,7 @@ export const Editor = ({ initialData }: EditorProps) => {
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
       />
-      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex lg:flex-row flex-col-reverse">
+      <div className="absolute lg:h-[calc(100%-68px)] h-[calc(100%-100px)] w-full lg:top-[68px] top-[100px] flex lg:flex-row flex-col-reverse mt-auto">
         <Sidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
@@ -200,7 +200,7 @@ export const Editor = ({ initialData }: EditorProps) => {
             onChangeActiveTool={onChangeActiveTool}
             key={JSON.stringify(editor?.canvas.getActiveObject())}
           />
-          <div className="flex lg:h-[calc(100%-114px)] h-[calc(100%-300px)] bg-muted mb-auto" ref={containerRef}>
+          <div className="flex lg:h-[calc(100%-114px)] h-[calc(100%-200px)] bg-muted my-auto" ref={containerRef}>
             <canvas ref={canvasRef} />
           </div>
           <Footer editor={editor} />
