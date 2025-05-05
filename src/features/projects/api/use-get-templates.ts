@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 export type ResponseType = {
   data: Array<{
     id: string;
-    name: string;
+    templateName: string;
     templateJson: any;
-    thumbnailUrl?: string;
+    templateThumbnail?: string;
   }>;
 };
 

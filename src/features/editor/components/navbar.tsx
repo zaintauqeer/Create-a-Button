@@ -131,8 +131,8 @@ const handleAddToCart = () => {
   return (
     <nav className="w-full flex items-center p-4 h-[68px] lg:gap-x-7 gap-x-2 border-b lg:pl-[34px]">
       <Logo />
-      <div className="w-full flex items-center gap-x-1 h-full">
-        {/* <DropdownMenu modal={false}>
+      <div className="w-full flex items-center gap-x-1 h-full z-[90]">
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="ghost">
               File
@@ -153,7 +153,7 @@ const handleAddToCart = () => {
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu> */}
+        </DropdownMenu>
         <Separator orientation="vertical" className="mx-1" />
         {/* <Hint label="Select" side="bottom" sideOffset={10}>
           <Button
@@ -211,7 +211,7 @@ const handleAddToCart = () => {
           </div>
         )} */}
         <div className="ml-auto flex items-center gap-x-4">
-          {/* <DropdownMenu modal={false}>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="ghost">
                 Export
@@ -255,7 +255,7 @@ const handleAddToCart = () => {
                   </p>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 className="flex items-center gap-x-2"
                 onClick={() => editor?.saveSvg()}
               >
@@ -266,10 +266,10 @@ const handleAddToCart = () => {
                     Best for editing in vector software
                   </p>
                 </div>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
           
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
               
           {loading ? (
               <div className='block h-8 w-24'>

@@ -48,7 +48,6 @@ export const TemplateSidebar = ({
     const ok = await confirm();
 
     if (ok) {
-      console.log("template",template.templateJson)
       editor?.loadJson(template.templateJson);
     }
   };
@@ -56,7 +55,7 @@ export const TemplateSidebar = ({
   return (
     <aside
       className={cn(
-        "bg-white relative border-r z-[40] w-[360px] h-full flex flex-col",
+        "bg-white lg:left-[100px] absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
         activeTool === "templates" ? "visible" : "hidden",
       )}
     >
@@ -86,13 +85,13 @@ export const TemplateSidebar = ({
                 <button
                   onClick={() => onClick(template)}
                   key={template.id}
-                  className="relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
+                  className="aspect-square relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                 >
                   <Image
                     fill
-                    src={template.thumbnailUrl || ""}
-                    alt={template.name || "Template"}
-                    className="object-cover"
+                    src={template.templateThumbnail || ""}
+                    alt={template.templateName || "Template"}
+                    className="object-cover p-4"
                   />
                   {/* {template.isPro && (
                     <div className="absolute top-2 right-2 size-8 items-center flex justify-center bg-black/50 rounded-full">
@@ -102,7 +101,7 @@ export const TemplateSidebar = ({
                   <div
                     className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left"
                   >
-                    {template.name}
+                    {template.templateName}
                   </div>
                 </button>
               )
