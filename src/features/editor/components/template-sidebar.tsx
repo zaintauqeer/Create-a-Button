@@ -43,12 +43,20 @@ export const TemplateSidebar = ({
   };
 
   const onClick = async (template: ResponseType["data"][0]) => {
- 
-
     const ok = await confirm();
-
+    // console.log(`${process.env.NEXT_PUBLIC_API_URL}${template.templateJson}`)
+    // return
     if (ok) {
-      editor?.loadJson(template.templateJson);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${template.templateJson}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch template content');
+        }
+        const templateContent = await response.text();
+        editor?.loadJson(templateContent);
+      } catch (error) {
+        console.error('Error loading template:', error);
+      }
     }
   };
 

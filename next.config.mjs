@@ -22,6 +22,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "x81eer7l7u.ufs.sh"
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com"
+      },
     ],
   },
 };

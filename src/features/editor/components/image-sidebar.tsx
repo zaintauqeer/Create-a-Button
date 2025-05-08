@@ -109,18 +109,23 @@ export const ImageSidebar = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const newImage: ImageData = {
-        id: (data.length + 1).toString(),
-        urls: {
-          regular: URL.createObjectURL(file),
-          small: URL.createObjectURL(file),
-        },
-        alt_description: "Uploaded Image",
-        user: {
-          name: "User",
-        },
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        const newImage: ImageData = {
+          id: (data.length + 1).toString(),
+          urls: {
+            regular: dataUrl,
+            small: dataUrl,
+          },
+          alt_description: "Uploaded Image",
+          user: {
+            name: "User",
+          },
+        };
+        setData([...data, newImage]);
       };
-      setData([...data, newImage]);
+      reader.readAsDataURL(file);
     }
   };
 
