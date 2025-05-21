@@ -19,7 +19,7 @@ import {
   Trash,
   ALargeSmall,
   SquareSplitHorizontal,
-
+  Spline,
   Copy,
   Circle
 } from "lucide-react";
@@ -57,6 +57,7 @@ export const Toolbar = ({
   const initialFontUnderline = editor?.getActiveFontUnderline();
   const initialTextAlign = editor?.getActiveTextAlign();
   const initialFontSize = editor?.getActiveFontSize() || FONT_SIZE
+  const initialCurve = editor?.getActiveCurveText();
 
   const [properties, setProperties] = useState({
     fillColor: initialFillColor,
@@ -68,6 +69,7 @@ export const Toolbar = ({
     fontUnderline: initialFontUnderline,
     textAlign: initialTextAlign,
     fontSize: initialFontSize,
+    curve: initialCurve,
   });
 
   const selectedObject = editor?.selectedObjects[0];
@@ -76,17 +78,6 @@ export const Toolbar = ({
   const isText = isTextType(selectedObjectType);
   const isImage = selectedObjectType === "image";
 
-  const onChangeFontSize = (value: number) => {
-    if (!selectedObject) {
-      return;
-    }
-
-    editor?.changeFontSize(value);
-    setProperties((current) => ({
-      ...current,
-      fontSize: value,
-    }));
-  };
 
   const onChangeTextAlign = (value: string) => {
     if (!selectedObject) {
@@ -389,28 +380,44 @@ export const Toolbar = ({
         </div>
       )}
       {isText && (
-        <div className="flex items-center  justify-center">
-          <Hint label="Font Size" side="bottom" sideOffset={5}>
-            <div className="flex flex-col items-center">
-              <Button
-                onClick={() => onChangeActiveTool("fontSize")}
-                size="icon"
-                variant="ghost"
-                className={cn(
-                  "w-auto px-2 text-lg",
-                  activeTool === "fontSize" && "bg-gray-100"
-                )}
-              >
-                <ALargeSmall className="lg:size-4 size-6" />
-              </Button>
-              <small className="lg:hidden">Font Size</small>
-            </div>
-          </Hint>
-          {/* <FontSizeInput
-            value={properties.fontSize}
-            onChange={onChangeFontSize}
-         /> */}
-        </div>
+        <>
+          <div className="flex items-center  justify-center">
+            <Hint label="Font Size" side="bottom" sideOffset={5}>
+              <div className="flex flex-col items-center">
+                <Button
+                  onClick={() => onChangeActiveTool("fontSize")}
+                  size="icon"
+                  variant="ghost"
+                  className={cn(
+                    "w-auto px-2 text-lg",
+                    activeTool === "fontSize" && "bg-gray-100"
+                  )}
+                >
+                  <ALargeSmall className="lg:size-4 size-6" />
+                </Button>
+                <small className="lg:hidden">Font Size</small>
+              </div>
+            </Hint>
+          </div>
+          <div className="flex items-center  justify-center">
+            <Hint label="Curve Text" side="bottom" sideOffset={5}>
+              <div className="flex flex-col items-center">
+                <Button
+                  onClick={() => onChangeActiveTool("curveText")}
+                  size="icon"
+                  variant="ghost"
+                  className={cn(
+                    "w-auto px-2 text-lg",
+                    activeTool === "curveText" && "bg-gray-100"
+                  )}
+                >
+                  <Spline className="lg:size-4 size-6" />
+                </Button>
+                <small className="lg:hidden">Curve Text</small>
+              </div>
+            </Hint>
+          </div>
+        </>
       )}
       {isImage && (
         <div className="flex items-center  justify-center">

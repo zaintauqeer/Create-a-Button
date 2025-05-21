@@ -32,9 +32,6 @@ import { useAutoResize } from "@/features/editor/hooks/use-auto-resize";
 import { useCanvasEvents } from "@/features/editor/hooks/use-canvas-events";
 import { useWindowEvents } from "@/features/editor/hooks/use-window-events";
 import { useLoadState } from "@/features/editor/hooks/use-load-state";
-import { useCurvedText } from './use-curved-text';
-import { ITextboxOptions } from "fabric/fabric-impl";
-import { CurvedTextOptions } from './use-curved-text';
 
 const buildEditor = ({
   save,
@@ -150,9 +147,10 @@ const buildEditor = ({
     center(object);
     canvas.add(object);
     canvas.setActiveObject(object);
+    let path: fabric.Path = new fabric.Path('');
+    canvas.add(path);
   };
 
-  const { addCurvedText } = useCurvedText(canvas);
 
   return {
     savePreview,
@@ -331,6 +329,58 @@ const buildEditor = ({
       // @ts-ignore
       // Faulty TS library, underline exists.
       const value = selectedObject.get("underline") || false;
+
+      return value;
+    },
+    changeCurveText: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          const clampedValue = Math.max(-360, Math.min(360, value)); // Allow negative for upward curve
+    
+          let path: fabric.Path | null = null;
+    
+          const textWidth = object.width ?? 300;
+          const halfWidth = textWidth / 2;
+    
+          if (clampedValue === 0) {
+            path = null; // Straight line, no curve
+          } else {
+            // Quadratic Bézier curve: M start Q control end
+            // Control point at (0, clampedValue) bends the curve
+            const pathString = `M ${-halfWidth} 0 Q 0 ${clampedValue} ${halfWidth} 0`;
+            path = new fabric.Path(pathString, {
+              fill: 'black',
+              stroke: '',
+              selectable: false,
+              evented: false,
+              visible: false // Completely hide the path
+            });
+          }
+    
+          // @ts-ignore
+          object.set({path: path,
+            pathStartOffset: 0.5, // Center the text along the path
+          });
+    
+          // Ensure text stays centered without vertical shift
+          object.setCoords();
+        }
+      });
+    
+      canvas.renderAll();
+    },
+    
+    
+    getActiveCurveText: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) {
+        return false;
+      }
+
+      // @ts-ignore
+      // Faulty TS library, underline exists.
+      const value = selectedObject.get("text") || false;
 
       return value;
     },
@@ -623,9 +673,6 @@ const buildEditor = ({
       return value;
     },
     selectedObjects,
-    addCurvedText: (text: string, options?: Partial<CurvedTextOptions>) => {
-      addCurvedText(text, { ...options, fill: fillColor });
-    },
   };
 };
 

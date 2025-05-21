@@ -71,17 +71,6 @@ export const TextSidebar = ({
           >
             Paragraph
           </Button>
-          {/* <Button
-            className="w-full h-16"
-            variant="secondary"
-            size="lg"
-            onClick={() => editor?.addCurvedText("Curved text", {
-              fontSize: 32,
-            })}
-          >
-            Curved text
-          </Button> */}
-       
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

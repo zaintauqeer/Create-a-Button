@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { AlertTriangle, Loader, Crown } from "lucide-react";
+import { AlertTriangle, Loader, Crown, Search } from "lucide-react";
+import { useState } from "react";
 
 import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
@@ -15,6 +16,7 @@ import { ResponseType, useGetTemplates } from "@/features/projects/api/use-get-t
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useConfirm } from "@/hooks/use-confirm";
+import { Input } from "@/components/ui/input";
 
 interface TemplateSidebarProps {
   editor: Editor | undefined;
@@ -28,6 +30,7 @@ export const TemplateSidebar = ({
   onChangeActiveTool,
 }: TemplateSidebarProps) => {
   const { shouldBlock, triggerPaywall } = usePaywall();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
@@ -36,7 +39,13 @@ export const TemplateSidebar = ({
 
   const { data, isLoading, isError } = useGetTemplates();
 
-  
+  const filteredTemplates = data?.filter((template: { templateName: string; tags: string[]; }) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      template.templateName?.toLowerCase().includes(searchLower) ||
+      template.tags?.some((tag: string) => tag.toLowerCase().includes(searchLower))
+    );
+  });
 
   const onClose = () => {
     onChangeActiveTool("select");
@@ -44,11 +53,9 @@ export const TemplateSidebar = ({
 
   const onClick = async (template: ResponseType["data"][0]) => {
     const ok = await confirm();
-    // console.log(`${process.env.NEXT_PUBLIC_API_URL}${template.templateJson}`)
-    // return
     if (ok) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${template.templateJson}`);
+        const response = await fetch(`${template.templateJson}`);
         if (!response.ok) {
           throw new Error('Failed to fetch template content');
         }
@@ -72,6 +79,17 @@ export const TemplateSidebar = ({
         title="Templates"
         description="Choose from a variety of templates to get started"
       />
+      <div className="px-4 py-2">
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search templates by name or tags..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      </div>
       {isLoading && (
         <div className="flex items-center justify-center flex-1">
           <Loader className="size-4 text-muted-foreground animate-spin" />
@@ -88,7 +106,7 @@ export const TemplateSidebar = ({
       <ScrollArea>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            {data && data.map((template: ResponseType["data"][0]) => {
+            {filteredTemplates?.map((template: ResponseType["data"][0]) => {
               return (
                 <button
                   onClick={() => onClick(template)}
@@ -101,16 +119,23 @@ export const TemplateSidebar = ({
                     alt={template.templateName || "Template"}
                     className="object-cover p-4"
                   />
-                  {/* {template.isPro && (
-                    <div className="absolute top-2 right-2 size-8 items-center flex justify-center bg-black/50 rounded-full">
-                      <Crown className="size-4 fill-yellow-500 text-yellow-500" />
-                    </div>
-                  )} */}
                   <div
                     className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left"
                   >
                     {template.templateName}
                   </div>
+                  {template.tags && template.tags.length > 0 && (
+                    <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                      {template.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="bg-black/50 text-white text-[8px] px-1 rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </button>
               )
             })}

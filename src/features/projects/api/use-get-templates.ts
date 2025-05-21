@@ -6,6 +6,7 @@ export type ResponseType = {
     templateName: string;
     templateJson: any;
     templateThumbnail?: string;
+    tags:string[];
   }>;
 };
 

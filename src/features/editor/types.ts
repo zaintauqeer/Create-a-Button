@@ -1,7 +1,6 @@
 import { fabric } from "fabric";
 import { ITextboxOptions } from "fabric/fabric-impl";
 import * as material from "material-colors";
-import { CurvedTextOptions } from './hooks/use-curved-text';
 
 export const JSON_KEYS = [
   "name",
@@ -109,6 +108,7 @@ export type ActiveTool =
   | "settings"
   | "ai"
   | "remove-bg"
+  | "curveText"
   | "templates";
 
 export const FILL_COLOR = "rgba(0,0,0,1)";
@@ -167,6 +167,7 @@ export const TEXT_OPTIONS = {
   top: 100,
   fill: FILL_COLOR,
   fontSize: FONT_SIZE,
+  curveText: 0,
   fontFamily: FONT_FAMILY,
 };
 
@@ -233,6 +234,8 @@ export interface Editor {
   getActiveFontSize: () => number;
   changeTextAlign: (value: string) => void;
   getActiveTextAlign: () => string;
+  changeCurveText: (value: number) => void;
+  getActiveCurveText: () => number;
   changeFontUnderline: (value: boolean) => void;
   getActiveFontUnderline: () => boolean;
   changeFontLinethrough: (value: boolean) => void;
@@ -264,5 +267,4 @@ export interface Editor {
   getActiveStrokeWidth: () => number;
   getActiveStrokeDashArray: () => number[];
   selectedObjects: fabric.Object[];
-  addCurvedText: (text: string, options?: Partial<CurvedTextOptions>) => void;
 };
