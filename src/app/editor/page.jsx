@@ -52,4 +52,4 @@ export default function EditorPage() {
   return (
     <Editor initialData={data}/>
   )
-}
+}  
