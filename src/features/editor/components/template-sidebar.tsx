@@ -38,12 +38,14 @@ export const TemplateSidebar = ({
   )
 
   const { data, isLoading, isError } = useGetTemplates();
+  
+  const filteredTemplates = data?.filter((template: { templateName: string; templateTags: string[]; }) => {
+    console.log(data)
 
-  const filteredTemplates = data?.filter((template: { templateName: string; tags: string[]; }) => {
     const searchLower = searchQuery.toLowerCase();
     return (
       template.templateName?.toLowerCase().includes(searchLower) ||
-      template.tags?.some((tag: string) => tag.toLowerCase().includes(searchLower))
+      template.templateTags?.some((tag: string) => tag.toLowerCase().includes(searchLower))
     );
   });
 
