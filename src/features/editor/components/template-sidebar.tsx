@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { AlertTriangle, Loader, Crown, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
@@ -55,6 +55,7 @@ export const TemplateSidebar = ({
     const ok = await confirm();
     if (ok) {
       try {
+        console.log(template);
         const response = await fetch(`${template.templateJson}`);
         if (!response.ok) {
           throw new Error('Failed to fetch template content');
@@ -66,6 +67,34 @@ export const TemplateSidebar = ({
       }
     }
   };
+
+  useEffect(() => {
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const templateId = searchParams.get('templateId');
+
+    if (templateId && data) {
+      const template = data.find((t: { _id: string; }) => t._id === templateId);
+      if (template) {
+        console.log("templates", data);
+        fetch(template.templateJson)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch template content');
+            }
+            return response.text();
+          })
+          .then((templateContent) => {
+            console.log("templateContent", templateContent);
+            editor?.loadJson(templateContent);
+          })
+          .catch((error) => {
+            console.error('Error loading template:', error);
+          });
+      }
+    }
+    
+  }, [data]);
 
   return (
     <aside
@@ -106,11 +135,11 @@ export const TemplateSidebar = ({
       <ScrollArea>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            {filteredTemplates?.map((template: ResponseType["data"][0]) => {
+            {filteredTemplates?.map((template: ResponseType["data"][0], index: number) => {
               return (
                 <button
                   onClick={() => onClick(template)}
-                  key={template.id}
+                  key={index}
                   className="aspect-square relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                 >
                   <Image
