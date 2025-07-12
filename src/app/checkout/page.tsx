@@ -50,9 +50,10 @@ export default function CheckoutPage() {
 			}
 		});
 		setErrors(newErrors);
-		return Object.keys(newErrors).length === 0;
+		return Object.keys(newErrors).length === 0; 
 	};
 
+	
 	const getLocalStorageData = async () =>{
 		const encryptedData = await localStorage.getItem("checkoutData");
 		if (encryptedData) {

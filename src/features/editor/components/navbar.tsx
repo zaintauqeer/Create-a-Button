@@ -51,11 +51,7 @@ export const Navbar = ({
 }: NavbarProps) => {
 
 
-  const [products, setProducts] = useState<any[]>([]);
-  const [firstProductPrice, setfirstProductPrice] = useState<number>();
   const [newPrice, setNewPrice] = useState<number>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isDisable, setIsDisable] = useState<boolean>(true);
   const [sizeIndex, setSizeIndex] = useState<string>();
 
 
@@ -86,39 +82,6 @@ export const Navbar = ({
       }
     },
   });
-
-  
-
-  useEffect(() => {
-    const getAllProducts = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/all`, {
-                method: 'GET',
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            console.log(data)
-            setProducts(data.data);
-            setfirstProductPrice(data.data[0].price)
-            setNewPrice(data.data[0].price)
-            setLoading(false)
-        } catch (error) {
-            console.error('Failed to fetch products:', error);
-        }
-    };
-
-    getAllProducts();
-}, []);
-
-function selectSize(event: React.ChangeEvent<HTMLSelectElement>) {
-  const size = event.target.value
-  setSizeIndex(size)
-  let newPrice = (firstProductPrice?firstProductPrice:0) + products[0].sizes[size].price
-  setNewPrice(newPrice)
-  setIsDisable(false)
-}
 
 const handleAddToCart = () => {
   if (editor) {
@@ -270,25 +233,7 @@ const handleAddToCart = () => {
           </div>
         )} */}
         <div className="lg:ml-auto flex items-center gap-x-4">
-          
-              
-          {loading ? (
-              <div className='block h-8 w-24'>
-                  <SkeletonTheme  baseColor="#eef" highlightColor="#fff">
-                          <Skeleton className='h-8 w-24' count={1} />
-                  </SkeletonTheme>
-              </div>
-          ):
-              <select defaultValue={""} onChange={selectSize} className='block outline-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500' name="" id="">
-                  <option value="" hidden>Select Size</option>
-                  {products[0]?.sizes?.map((size: {name:string,price:number,_id:string,productSize:string}, index:number) => {
-                      return (
-                          <option key={size._id} value={index}>{size.name} {`${size.price?'+$'+size.price:""}`}</option>
-                      );
-                  })}
-              </select>
-          }
-          <Button onClick={handleAddToCart} disabled={isDisable}>
+          <Button onClick={handleAddToCart} >
                 Buy (${newPrice})
           </Button>
           <UserButton />
