@@ -85,7 +85,6 @@ export const Navbar = ({
 
 const handleAddToCart = () => {
   if (editor) {
-    // Export the image as a data URL (base64)
     editor?.savePreview();
     router.push(`/editor/preview?size=${sizeIndex}`);
   }
