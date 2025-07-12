@@ -86,7 +86,7 @@ export const Navbar = ({
 const handleAddToCart = () => {
   if (editor) {
     editor?.savePreview();
-    router.push(`/editor/preview?size=${sizeIndex}`);
+    router.push(`/editor/preview`);
   }
 };
 
@@ -233,7 +233,7 @@ const handleAddToCart = () => {
         )} */}
         <div className="lg:ml-auto flex items-center gap-x-4">
           <Button onClick={handleAddToCart} >
-                Buy (${newPrice})
+                Buy
           </Button>
           <UserButton />
         </div>
