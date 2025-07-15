@@ -10,14 +10,13 @@ import { useEffect, useState } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { SmallNavbar } from './smallNavbar'
+import { useGetTemplates } from '@/features/projects/api/use-get-templates'
+import { useEditor } from '../hooks/use-editor'
 
-interface Product {
-    id: string;
-    name: string;
-    variations: {
-      buttonSize: string[];
-      buttonBackgroundType: string[];
-    };
+interface TemplateType {
+    _id: string;
+    templateThumbnail: string;
+    templateName: string;
   }
 
 const DesignPreview = () => {
@@ -35,12 +34,23 @@ const DesignPreview = () => {
     const [quantity, setQuantity] = useState<number>(1);
     const [finalPrice, setFinalPrice] = useState<number>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const { data } = useGetTemplates();
+    const [template, setTemplate] = useState<TemplateType | null>(null)
+    const searchParams = new URLSearchParams(window.location.search);
+     const { editor } = useEditor({
+        // defaultState: initialData.json,
+        // defaultWidth: 500,
+        // defaultHeight: 500,
+        // clearSelectionCallback: onClearSelection,
+        // saveCallback: debouncedSave,
+      });
     const getLocalStorageData = async () =>{
 		const imgData = await localStorage.getItem("previewImage");
 		
 		if (imgData) {
 			setImageSrc(imgData);
+            
+            
 			setIsLoading(false);
 
 		} else {
@@ -48,8 +58,9 @@ const DesignPreview = () => {
 		}
 	}
 
+
     useEffect(() => {
-        getLocalStorageData()
+      getLocalStorageData()      
         const getAllProducts = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/all`, {
@@ -59,7 +70,10 @@ const DesignPreview = () => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                setProducts(data.data);
+                // if(!searchParams.get('templateId')) {
+                    setProducts(data.data);
+                    setLoading(false);
+                // };
                 setfirstProductPrice(data.data[0].price)
                 const urlParams = new URLSearchParams(window.location.search);
 		        const sizeParam = urlParams.get('size');
@@ -73,7 +87,7 @@ const DesignPreview = () => {
                 } else {
                     console.warn('Size parameter is invalid or not found');
                 }
-                setLoading(false);
+                
             } catch (error) {
                 console.error('Failed to fetch products:', error);
             }
@@ -114,7 +128,7 @@ const DesignPreview = () => {
     function handleCheckout() {
         if (selectedSize) {
             const checkoutData = {
-                name:products[0].title,
+                name: template? template?.templateName : products[0].title,
                 size:selectedSize,
                 price:newPrice,
                 totalAmount:finalPrice,
@@ -131,7 +145,22 @@ const DesignPreview = () => {
         }
     }
 
+     useEffect(() => {
+    
+        
+        const templateId = searchParams.get('templateId');        
+        if (templateId && data) {
+          const templateContent = data.find((t: { _id: string; }) => t._id === templateId);
+          setLoading(false);
+          if (templateContent) {
+              setTemplate(templateContent)
+            }
+        }
+        
+    }, [data]);
+    
     if(imageSrc && isLoading==false){
+        console.log("Template: ", template);
         return (
             <>
                 <SmallNavbar/>
@@ -145,11 +174,11 @@ const DesignPreview = () => {
                                 <div className="flex gap-6 items-start">
                                     <TemplateButton
                                         className={cn("max-w-[100px]")}
-                                        imgSrc={imageSrc|| ""}
+                                        imgSrc={template? template?.templateThumbnail : imageSrc}
                                     />
                                     <div className='w-full'>
-                                        <h5 className='text-base font-bold'>{products[0]?.title}</h5>
-                                        <p className='text-slate-500 mb-3 text-sm '>{products[0]?.description}</p>
+                                        <h5 className='text-base font-bold'>{template? template?.templateName :  products[0]?.title}</h5>
+                                        <p className='text-slate-500 mb-3 text-sm '>{template? "Custom template that user can modify the design" : products[0]?.description}</p>
                                         <div className="flex gap-3 items-center flex-wrap">
                                             {loading ? (
                                                 <div className='block h-10 mt-3'>
