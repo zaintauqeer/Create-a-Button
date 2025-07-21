@@ -28,8 +28,8 @@ export const ShapeSidebar = ({
   return (
     <aside
       className={cn(
-        "bg-white lg:left-[100px] absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
-        activeTool === "shapes" ? "visible" : "hidden",
+        "bg-white lg:left-[100px] absolute transition-transform duration-500 ease-in-out lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
+        activeTool === "shapes" ? "translate-x-0" : "-translate-x-[135%]",
       )}
     >
       <ToolSidebarHeader

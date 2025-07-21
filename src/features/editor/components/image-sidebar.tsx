@@ -1,21 +1,18 @@
+import { buttonVariants } from '@/components/ui/button';
 import Image from "next/image";
 import Link from "next/link";
-import { AlertTriangle, Loader, Upload } from "lucide-react";
-import { buttonVariants } from '@/components/ui/button'
 
-import { 
-  ActiveTool, 
-  Editor,
-} from "@/features/editor/types";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
+import {
+  ActiveTool,
+  Editor,
+} from "@/features/editor/types";
 
-import { useGetImages } from "@/features/images/api/use-get-images";
 
-import { cn } from "@/lib/utils";
-import { UploadButton } from "@/lib/uploadthing";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 
 interface ImageSidebarProps {
@@ -132,8 +129,8 @@ export const ImageSidebar = ({
   return (
     <aside
       className={cn(
-        "bg-white lg:left-[100px] absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
-        activeTool === "images" ? "visible" : "hidden",
+        "bg-white lg:left-[100px] absolute transition-transform duration-500 ease-in-out lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
+        activeTool === "images" ? "translate-x-0" : "-translate-x-[135%]"
       )}
     >
       <ToolSidebarHeader
