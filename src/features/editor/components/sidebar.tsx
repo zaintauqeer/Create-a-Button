@@ -1,6 +1,6 @@
 "use client";
 
-import { 
+import {
   LayoutTemplate,
   ImageIcon,
   Pencil,
@@ -16,14 +16,11 @@ import { SidebarItem } from "@/features/editor/components/sidebar-item";
 interface SidebarProps {
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
-};
+}
 
-export const Sidebar = ({
-  activeTool,
-  onChangeActiveTool,
-}: SidebarProps) => {
+export const Sidebar = ({ activeTool, onChangeActiveTool }: SidebarProps) => {
   return (
-    <aside className="bg-white flex flex-col lg:w-[100px] w-full lg:h-full h-[80px] border-r overflow-y-auto">
+    <aside className="bg-white flex flex-col lg:w-[100px] w-full lg:h-full h-[80px] border-r overflow-y-auto z-[1000]">
       <ul className="flex lg:flex-col">
         <SidebarItem
           icon={LayoutTemplate}

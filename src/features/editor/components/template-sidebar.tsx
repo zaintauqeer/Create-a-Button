@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 
 import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
-import { 
-  ActiveTool, 
-  Editor,
-} from "@/features/editor/types";
+import { ActiveTool, Editor } from "@/features/editor/types";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
 
-import { ResponseType, useGetTemplates } from "@/features/projects/api/use-get-templates";
+import {
+  ResponseType,
+  useGetTemplates,
+} from "@/features/projects/api/use-get-templates";
 
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -22,7 +22,7 @@ interface TemplateSidebarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
-};
+}
 
 export const TemplateSidebar = ({
   editor,
@@ -35,19 +35,23 @@ export const TemplateSidebar = ({
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
     "You are about to replace the current project with this template."
-  )
+  );
 
   const { data, isLoading, isError } = useGetTemplates();
-  
-  const filteredTemplates = data?.filter((template: { templateName: string; templateTags: string[]; }) => {
-    console.log(data)
 
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      template.templateName?.toLowerCase().includes(searchLower) ||
-      template.templateTags?.some((tag: string) => tag.toLowerCase().includes(searchLower))
-    );
-  });
+  const filteredTemplates = data?.filter(
+    (template: { templateName: string; templateTags: string[] }) => {
+      console.log(data);
+
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        template.templateName?.toLowerCase().includes(searchLower) ||
+        template.templateTags?.some((tag: string) =>
+          tag.toLowerCase().includes(searchLower)
+        )
+      );
+    }
+  );
 
   const onClose = () => {
     onChangeActiveTool("select");
@@ -60,29 +64,28 @@ export const TemplateSidebar = ({
         console.log(template);
         const response = await fetch(`${template.templateJson}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch template content');
+          throw new Error("Failed to fetch template content");
         }
         const templateContent = await response.text();
         editor?.loadJson(templateContent);
       } catch (error) {
-        console.error('Error loading template:', error);
+        console.error("Error loading template:", error);
       }
     }
   };
 
   useEffect(() => {
-
     const searchParams = new URLSearchParams(window.location.search);
-    const templateId = searchParams.get('templateId');
+    const templateId = searchParams.get("templateId");
 
     if (templateId && data) {
-      const template = data.find((t: { _id: string; }) => t._id === templateId);
+      const template = data.find((t: { _id: string }) => t._id === templateId);
       if (template) {
         console.log("templates", data);
         fetch(template.templateJson)
           .then((response) => {
             if (!response.ok) {
-              throw new Error('Failed to fetch template content');
+              throw new Error("Failed to fetch template content");
             }
             return response.text();
           })
@@ -91,18 +94,19 @@ export const TemplateSidebar = ({
             editor?.loadJson(templateContent);
           })
           .catch((error) => {
-            console.error('Error loading template:', error);
+            console.error("Error loading template:", error);
           });
       }
     }
-    
   }, [data]);
 
   return (
     <aside
       className={cn(
         "bg-white lg:left-[100px] absolute transition-transform duration-500 ease-in-out lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
-        activeTool === "templates" ? "translate-x-0" : "-translate-x-[135%]"
+        activeTool === "templates"
+          ? "translate-x-0 translate-y-0"
+          : "translate-y-[135%] lg:translate-y-0 lg:-translate-x-[135%]"
       )}
     >
       <ConfirmDialog />
@@ -137,39 +141,39 @@ export const TemplateSidebar = ({
       <ScrollArea>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            {filteredTemplates?.map((template: ResponseType["data"][0], index: number) => {
-              return (
-                <button
-                  onClick={() => onClick(template)}
-                  key={index}
-                  className="aspect-square relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
-                >
-                  <Image
-                    fill
-                    src={template.templateThumbnail || ""}
-                    alt={template.templateName || "Template"}
-                    className="object-cover p-4"
-                  />
-                  <div
-                    className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left"
+            {filteredTemplates?.map(
+              (template: ResponseType["data"][0], index: number) => {
+                return (
+                  <button
+                    onClick={() => onClick(template)}
+                    key={index}
+                    className="aspect-square relative w-full group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                   >
-                    {template.templateName}
-                  </div>
-                  {template.tags && template.tags.length > 0 && (
-                    <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-                      {template.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="bg-black/50 text-white text-[8px] px-1 rounded"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                    <Image
+                      fill
+                      src={template.templateThumbnail || ""}
+                      alt={template.templateName || "Template"}
+                      className="object-cover p-4"
+                    />
+                    <div className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left">
+                      {template.templateName}
                     </div>
-                  )}
-                </button>
-              )
-            })}
+                    {template.tags && template.tags.length > 0 && (
+                      <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                        {template.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="bg-black/50 text-white text-[8px] px-1 rounded"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </button>
+                );
+              }
+            )}
           </div>
         </div>
       </ScrollArea>

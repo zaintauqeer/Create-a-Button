@@ -1,9 +1,4 @@
-import { 
-  ActiveTool, 
-  Editor,
-  fonts,
-  FONT_SIZE,
-} from "@/features/editor/types";
+import { ActiveTool, Editor, fonts, FONT_SIZE } from "@/features/editor/types";
 import { useState } from "react";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
@@ -12,19 +7,20 @@ import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { CurveTextInput } from "@/features/editor/components/curve-input";
+import { useEffect } from "react";
 
 interface CurveTextSidebarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
-};
+}
 
 export const CurveTextSidebar = ({
   editor,
   activeTool,
   onChangeActiveTool,
 }: CurveTextSidebarProps) => {
-  const initialCurveText = editor?.getActiveCurveText() || 0
+  const initialCurveText = editor?.getActiveCurveText() ?? -100;
 
   const onClose = () => {
     onChangeActiveTool("select");
@@ -48,11 +44,21 @@ export const CurveTextSidebar = ({
     }));
   };
 
+  useEffect(() => {
+    if (
+      activeTool === "curveText" &&
+      typeof properties.CurveText === "number"
+    ) {
+      // Only apply the curve text when the tool is active
+      editor?.changeCurveText(properties.CurveText);
+    }
+  }, [activeTool, properties.CurveText, editor]);
+
   return (
     <aside
       className={cn(
         "bg-white lg:left-[100px] absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
-        activeTool === "curveText" ? "visible" : "hidden",
+        activeTool === "curveText" ? "visible" : "hidden"
       )}
     >
       <ToolSidebarHeader
@@ -64,7 +70,7 @@ export const CurveTextSidebar = ({
           <CurveTextInput
             value={properties.CurveText}
             onChange={onChangeCurveText}
-         />
+          />
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

@@ -1,7 +1,4 @@
-import { 
-  ActiveTool, 
-  Editor, 
-} from "@/features/editor/types";
+import { ActiveTool, Editor } from "@/features/editor/types";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
 
@@ -13,7 +10,7 @@ interface TextSidebarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
-};
+}
 
 export const TextSidebar = ({
   editor,
@@ -28,18 +25,20 @@ export const TextSidebar = ({
     <aside
       className={cn(
         "bg-white lg:left-[100px] absolute transition-transform duration-500 ease-in-out lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
-        activeTool === "text" ? "translate-x-0" : "-translate-x-[135%]",
+        activeTool === "text"
+          ? "translate-x-0 translate-y-0"
+          : "translate-y-[135%] lg:translate-y-0 lg:-translate-x-[135%]"
       )}
     >
-      <ToolSidebarHeader
-        title="Text"
-        description="Add text to your canvas"
-      />
+      <ToolSidebarHeader title="Text" description="Add text to your canvas" />
       <ScrollArea>
         <div className="p-4 space-y-4 border-b">
           <Button
             className="w-full"
-            onClick={() => {editor?.addText("Textbox"); onClose()}}
+            onClick={() => {
+              editor?.addText("Textbox");
+              onClose();
+            }}
           >
             Add a textbox
           </Button>
@@ -47,27 +46,32 @@ export const TextSidebar = ({
             className="w-full h-16"
             variant="secondary"
             size="lg"
-            onClick={() => {editor?.addText("Heading", { fontSize: 80, fontWeight: 700, }); onClose()}}
+            onClick={() => {
+              editor?.addText("Heading", { fontSize: 80, fontWeight: 700 });
+              onClose();
+            }}
           >
-            <span className="text-3xl font-bold">
-              Add a heading
-            </span>
+            <span className="text-3xl font-bold">Add a heading</span>
           </Button>
           <Button
             className="w-full h-16"
             variant="secondary"
             size="lg"
-            onClick={() => {editor?.addText("Subheading", { fontSize: 44, fontWeight: 600, }); onClose()}}
+            onClick={() => {
+              editor?.addText("Subheading", { fontSize: 44, fontWeight: 600 });
+              onClose();
+            }}
           >
-            <span className="text-xl font-semibold">
-              Add a subheading
-            </span>
+            <span className="text-xl font-semibold">Add a subheading</span>
           </Button>
           <Button
             className="w-full h-16"
             variant="secondary"
             size="lg"
-            onClick={() => {editor?.addText("Paragraph", { fontSize: 32, }); onClose()}}
+            onClick={() => {
+              editor?.addText("Paragraph", { fontSize: 32 });
+              onClose();
+            }}
           >
             Paragraph
           </Button>

@@ -61,7 +61,11 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     if (isVerticallyCentered) snapX = centerX;
     if (isHorizontallyCentered) snapY = centerY;
 
-    activeObject.setPositionByOrigin(new fabric.Point(snapX, snapY), "center", "center");
+    activeObject.setPositionByOrigin(
+      new fabric.Point(snapX, snapY),
+      "center",
+      "center"
+    );
     activeObject.setCoords();
 
     // Show guidelines when close
@@ -83,8 +87,18 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     centerX = canvas.getWidth() / 2;
     centerY = canvas.getHeight() / 2;
 
-    verticalLine.set({ x1: centerX, x2: centerX, y1: 0, y2: canvas.getHeight() });
-    horizontalLine.set({ x1: 0, x2: canvas.getWidth(), y1: centerY, y2: centerY });
+    verticalLine.set({
+      x1: centerX,
+      x2: centerX,
+      y1: 0,
+      y2: canvas.getHeight(),
+    });
+    horizontalLine.set({
+      x1: 0,
+      x2: canvas.getWidth(),
+      y1: centerY,
+      y2: centerY,
+    });
 
     verticalLine.setCoords();
     horizontalLine.setCoords();
@@ -97,7 +111,7 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
   updateLines(); // Ensure correct positioning on load
 
   // Show rotation degree
-  let rotationDisplay: fabric.Object | undefined
+  let rotationDisplay: fabric.Object | undefined;
   rotationDisplay = new fabric.Text("", {
     fontSize: 18,
     fill: "#000",
@@ -108,7 +122,9 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
   canvas.add(rotationDisplay);
   rotationDisplay.set({ opacity: 0 }); // Initially hide the rotation display
   canvas.on("selection:created", (e) => {
-    let checkRotationDisplay = canvas.getObjects().find(obj => obj.type === 'text' && obj.fill === '#000');
+    let checkRotationDisplay = canvas
+      .getObjects()
+      .find((obj) => obj.type === "text" && obj.fill === "#000");
     if (!checkRotationDisplay) {
       rotationDisplay = new fabric.Text("", {
         fontSize: 18,
@@ -122,18 +138,17 @@ const initAligningGuidelines = (canvas: fabric.Canvas) => {
     }
   });
 
-  
   canvas.on("object:rotating", (e) => {
     const object = e.target;
-    if (object && typeof object.angle === 'number') {
+    if (object && typeof object.angle === "number") {
       const objectBounds = object.getBoundingRect();
       const displayX = objectBounds.left + objectBounds.width / 2 - 15;
       const displayY = objectBounds.top + objectBounds.height + 55; // 10 pixels below the object
-      rotationDisplay?.set({ 
+      rotationDisplay?.set({
         text: `${object.angle.toFixed(0)}°`,
         left: displayX,
         top: displayY,
-        opacity: 1 // Show the rotation display when rotating
+        opacity: 1, // Show the rotation display when rotating
       } as Partial<fabric.Object>); // Type assertion to fix the lint error
       rotationDisplay?.setCoords();
       canvas.requestRenderAll();

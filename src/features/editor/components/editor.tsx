@@ -7,10 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ResponseType } from "@/features/projects/api/use-get-project";
 import { useUpdateProject } from "@/features/projects/api/use-update-project";
 
-import { 
-  ActiveTool, 
-  selectionDependentTools
-} from "@/features/editor/types";
+import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
 import { Navbar } from "@/features/editor/components/navbar";
 import { Footer } from "@/features/editor/components/footer";
 import { useEditor } from "@/features/editor/hooks/use-editor";
@@ -35,23 +32,18 @@ import { CurveTextSidebar } from "./curve-sidebar";
 
 interface EditorProps {
   initialData: ResponseType["data"];
-};
+}
 
 export const Editor = ({ initialData }: EditorProps) => {
   const { mutate } = useUpdateProject(initialData.id);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSave = useCallback(
-    debounce(
-      (values: { 
-        json: string,
-        height: number,
-        width: number,
-      }) => {
-        mutate(values);
-    },
-    500
-  ), [mutate]);
+    debounce((values: { json: string; height: number; width: number }) => {
+      mutate(values);
+    }, 500),
+    [mutate]
+  );
 
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
 
@@ -69,21 +61,24 @@ export const Editor = ({ initialData }: EditorProps) => {
     // saveCallback: debouncedSave,
   });
 
-  const onChangeActiveTool = useCallback((tool: ActiveTool) => {
-    if (tool === "draw") {
-      editor?.enableDrawingMode();
-    }
+  const onChangeActiveTool = useCallback(
+    (tool: ActiveTool) => {
+      if (tool === "draw") {
+        editor?.enableDrawingMode();
+      }
 
-    if (activeTool === "draw") {
-      editor?.disableDrawingMode();
-    }
+      if (activeTool === "draw") {
+        editor?.disableDrawingMode();
+      }
 
-    if (tool === activeTool) {
-      return setActiveTool("select");
-    }
-    
-    setActiveTool(tool);
-  }, [activeTool, editor]);
+      if (tool === activeTool) {
+        return setActiveTool("select");
+      }
+
+      setActiveTool(tool);
+    },
+    [activeTool, editor]
+  );
 
   const canvasRef = useRef(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -192,7 +187,7 @@ export const Editor = ({ initialData }: EditorProps) => {
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
         />
-        
+
         <SettingsSidebar
           editor={editor}
           activeTool={activeTool}
@@ -205,13 +200,15 @@ export const Editor = ({ initialData }: EditorProps) => {
             onChangeActiveTool={onChangeActiveTool}
             key={JSON.stringify(editor?.canvas.getActiveObject())}
           />
-          <div className="flex lg:h-[calc(100%-114px)] h-[calc(100%-200px)] bg-muted my-auto" ref={containerRef}>
+          <div
+            className="flex lg:h-[calc(100%-114px)] h-[calc(100%-200px)] bg-muted my-auto"
+            ref={containerRef}
+          >
             <canvas ref={canvasRef} />
           </div>
           <Footer editor={editor} />
         </main>
       </div>
-      
     </div>
   );
 };
