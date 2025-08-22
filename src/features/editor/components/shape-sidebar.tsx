@@ -1,7 +1,3 @@
-import { IoTriangle } from "react-icons/io5";
-import { FaDiamond } from "react-icons/fa6";
-import { FaCircle, FaSquare, FaSquareFull } from "react-icons/fa";
-
 import { ActiveTool, Editor } from "@/features/editor/types";
 import { ShapeTool } from "@/features/editor/components/shape-tool";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
@@ -9,6 +5,10 @@ import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-hea
 
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
+import { useGetShapes } from "@/features/images/api/use-get-shapes";
+import { AlertTriangle, Icon, Loader, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface ShapeSidebarProps {
   editor: Editor | undefined;
@@ -21,6 +21,22 @@ export const ShapeSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: ShapeSidebarProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const { data: shapes, isLoading, isError } = useGetShapes();
+
+  const filteredShapes = shapes?.filter(
+    (shape: { shape_name: string; shape_tags: string[] }) => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        shape.shape_name?.toLowerCase().includes(searchLower) ||
+        shape.shape_tags?.some((tag: string) =>
+          tag.toLowerCase().includes(searchLower)
+        )
+      );
+    }
+  );
+
   const onClose = () => {
     onChangeActiveTool("select");
   };
@@ -38,51 +54,48 @@ export const ShapeSidebar = ({
         title="Shapes"
         description="Add shapes to your canvas"
       />
+
+      <div className="px-4 py-2">
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search images by name or tags..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      </div>
+      {isLoading && (
+        <div className="flex items-center justify-center flex-1">
+          <Loader className="size-4 text-muted-foreground animate-spin" />
+        </div>
+      )}
+      {isError && (
+        <div className="flex flex-col gap-y-4 items-center justify-center flex-1">
+          <AlertTriangle className="size-4 text-muted-foreground" />
+          <p className="text-muted-foreground text-xs">
+            Failed to fetch shapes
+          </p>
+        </div>
+      )}
       <ScrollArea>
         <div className="grid grid-cols-3 gap-4 p-4">
-          <ShapeTool
-            onClick={() => {
-              editor?.addCircle();
-              onClose();
-            }}
-            icon={FaCircle}
-          />
-          <ShapeTool
-            onClick={() => {
-              editor?.addSoftRectangle();
-              onClose();
-            }}
-            icon={FaSquare}
-          />
-          <ShapeTool
-            onClick={() => {
-              editor?.addRectangle();
-              onClose();
-            }}
-            icon={FaSquareFull}
-          />
-          <ShapeTool
-            onClick={() => {
-              editor?.addTriangle();
-              onClose();
-            }}
-            icon={IoTriangle}
-          />
-          <ShapeTool
-            onClick={() => {
-              editor?.addInverseTriangle();
-              onClose();
-            }}
-            icon={IoTriangle}
-            iconClassName="rotate-180"
-          />
-          <ShapeTool
-            onClick={() => {
-              editor?.addDiamond();
-              onClose();
-            }}
-            icon={FaDiamond}
-          />
+          {filteredShapes?.map((shape) => (
+            <button
+              className="aspect-square border rounded-md p-5"
+              onClick={() => {
+                editor?.addCircle();
+                onClose();
+              }}
+            >
+              <img
+                src={shape.shape}
+                alt={shape.shape_name}
+                className={"h-full w-full"}
+              />
+            </button>
+          ))}
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

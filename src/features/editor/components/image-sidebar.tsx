@@ -9,6 +9,9 @@ import { ActiveTool, Editor } from "@/features/editor/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useGetImages } from "@/features/images/api/use-get-images";
+import { AlertTriangle, Loader, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface ImageSidebarProps {
   editor: Editor | undefined;
@@ -17,15 +20,9 @@ interface ImageSidebarProps {
 }
 
 interface ImageData {
-  id: string;
-  urls: {
-    regular: string;
-    small: string;
-  };
-  alt_description: string;
-  user: {
-    name: string;
-  };
+  image: string;
+  image_name: string;
+  image_tags: string[];
 }
 
 export const ImageSidebar = ({
@@ -33,92 +30,41 @@ export const ImageSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: ImageSidebarProps) => {
-  // const { isLoading, isError } = useGetImages();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const { data, isLoading, isError } = useGetImages();
+
+  const filteredImages = data?.filter(
+    (image: { image_name: string; image_tags: string[] }) => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        image.image_name?.toLowerCase().includes(searchLower) ||
+        image.image_tags?.some((tag: string) =>
+          tag.toLowerCase().includes(searchLower)
+        )
+      );
+    }
+  );
 
   const onClose = () => {
     onChangeActiveTool("select");
   };
 
-  const [data, setData] = useState<ImageData[]>([
-    {
-      id: "1",
-      urls: {
-        regular: "/testimonials/1.jpg",
-        small: "/testimonials/1.jpg",
-      },
-      alt_description: "Image",
-      user: {
-        name: "Unsplash",
-      },
-    },
-    {
-      id: "2",
-      urls: {
-        regular: "/testimonials/2.jpg",
-        small: "/testimonials/2.jpg",
-      },
-      alt_description: "Image",
-      user: {
-        name: "Unsplash",
-      },
-    },
-    {
-      id: "3",
-      urls: {
-        regular: "/testimonials/3.jpg",
-        small: "/testimonials/3.jpg",
-      },
-      alt_description: "Image",
-      user: {
-        name: "Unsplash",
-      },
-    },
-    {
-      id: "4",
-      urls: {
-        regular: "/testimonials/4.jpg",
-        small: "/testimonials/4.jpg",
-      },
-      alt_description: "Image",
-      user: {
-        name: "Unsplash",
-      },
-    },
-    {
-      id: "5",
-      urls: {
-        regular: "/testimonials/5.jpg",
-        small: "/testimonials/5.jpg",
-      },
-      alt_description: "Image",
-      user: {
-        name: "Unsplash",
-      },
-    },
-  ]);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target?.result as string;
-        const newImage: ImageData = {
-          id: (data.length + 1).toString(),
-          urls: {
-            regular: dataUrl,
-            small: dataUrl,
-          },
-          alt_description: "Uploaded Image",
-          user: {
-            name: "User",
-          },
-        };
-        setData([...data, newImage]);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const dataUrl = e.target?.result as string;
+  //       const newImage: ImageData = {
+  //         image: "",
+  //         image_name: "",
+  //         image_tags: [],
+  //       };
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   return (
     <aside
@@ -133,21 +79,19 @@ export const ImageSidebar = ({
         title="Images"
         description="Add images to your canvas"
       />
-      <div className="p-4 border-b">
-        {/* <UploadButton
-          appearance={{
-            button: "w-full text-sm font-medium",
-            allowedContent: "hidden"
-          }}
-          content={{
-            button: "Upload Image"
-          }}
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            editor?.addImage(res[0].url);
-          }}
-        /> */}
+      <div className="px-4 py-2">
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search images by name or tags..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      </div>
 
+      {/* <div className="p-4 border-b">
         <label
           htmlFor="upload"
           className={buttonVariants({
@@ -164,8 +108,8 @@ export const ImageSidebar = ({
             onChange={handleFileChange}
           />
         </label>
-      </div>
-      {/* {isLoading && (
+      </div> */}
+      {isLoading && (
         <div className="flex items-center justify-center flex-1">
           <Loader className="size-4 text-muted-foreground animate-spin" />
         </div>
@@ -177,37 +121,36 @@ export const ImageSidebar = ({
             Failed to fetch images
           </p>
         </div>
-      )} */}
+      )}
       <ScrollArea>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            {data &&
-              data.map((image) => {
-                return (
-                  <button
-                    onClick={() => {
-                      editor?.addImage(image.urls.regular);
-                      onClose();
-                    }}
-                    key={image.id}
-                    className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
+            {filteredImages?.map((image) => {
+              return (
+                <button
+                  onClick={() => {
+                    editor?.addImage(image.image);
+                    onClose();
+                  }}
+                  key={image.id}
+                  className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
+                >
+                  <Image
+                    fill
+                    src={image.image}
+                    alt={image.image_name || "Image"}
+                    className="object-cover"
+                  />
+                  <Link
+                    target="_blank"
+                    href="#"
+                    className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white hover:underline p-1 bg-black/50 text-left"
                   >
-                    <Image
-                      fill
-                      src={image.urls.small}
-                      alt={image.alt_description || "Image"}
-                      className="object-cover"
-                    />
-                    <Link
-                      target="_blank"
-                      href="#"
-                      className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white hover:underline p-1 bg-black/50 text-left"
-                    >
-                      {image.user.name}
-                    </Link>
-                  </button>
-                );
-              })}
+                    {image.image_name}
+                  </Link>
+                </button>
+              );
+            })}
           </div>
         </div>
       </ScrollArea>

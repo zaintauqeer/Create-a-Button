@@ -41,8 +41,6 @@ export const TemplateSidebar = ({
 
   const filteredTemplates = data?.filter(
     (template: { templateName: string; templateTags: string[] }) => {
-      console.log(data);
-
       const searchLower = searchQuery.toLowerCase();
       return (
         template.templateName?.toLowerCase().includes(searchLower) ||
@@ -61,7 +59,6 @@ export const TemplateSidebar = ({
     const ok = await confirm();
     if (ok) {
       try {
-        console.log(template);
         const response = await fetch(`${template.templateJson}`);
         if (!response.ok) {
           throw new Error("Failed to fetch template content");
