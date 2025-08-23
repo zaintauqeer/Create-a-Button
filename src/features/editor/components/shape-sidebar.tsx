@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useGetShapes } from "@/features/images/api/use-get-shapes";
 import { AlertTriangle, Icon, Loader, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { fabric } from "fabric";
 
 interface ShapeSidebarProps {
   editor: Editor | undefined;
@@ -85,14 +86,31 @@ export const ShapeSidebar = ({
             <button
               className="aspect-square border rounded-md p-5"
               onClick={() => {
-                editor?.addCircle();
+                if (!editor?.canvas) return;
+
+                fabric.loadSVGFromURL(shape.shape, (objects, options) => {
+                  const svgObject = fabric.util.groupSVGElements(
+                    objects,
+                    options
+                  );
+                  svgObject.set({
+                    left: 100,
+                    top: 100,
+                    scaleX: 0.5,
+                    scaleY: 0.5,
+                  });
+
+                  editor.canvas.add(svgObject);
+                  editor.canvas.setActiveObject(svgObject);
+                  editor.canvas.renderAll();
+                });
                 onClose();
               }}
             >
               <img
                 src={shape.shape}
                 alt={shape.shape_name}
-                className={"h-full w-full"}
+                className={"h-full w-full object-contain"}
               />
             </button>
           ))}

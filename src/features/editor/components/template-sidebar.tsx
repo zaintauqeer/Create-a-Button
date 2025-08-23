@@ -59,11 +59,12 @@ export const TemplateSidebar = ({
     const ok = await confirm();
     if (ok) {
       try {
-        const response = await fetch(`${template.templateJson}`);
+        const response = await fetch(`${template.templateJsonUrl}`);
         if (!response.ok) {
           throw new Error("Failed to fetch template content");
         }
         const templateContent = await response.text();
+        console.log(templateContent);
         editor?.loadJson(templateContent);
       } catch (error) {
         console.error("Error loading template:", error);

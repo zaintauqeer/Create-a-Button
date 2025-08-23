@@ -4,7 +4,7 @@ export type ResponseType = {
   data: Array<{
     id: string;
     templateName: string;
-    templateJson: any;
+    templateJsonUrl: any;
     templateThumbnail?: string;
     tags: string[];
   }>;
