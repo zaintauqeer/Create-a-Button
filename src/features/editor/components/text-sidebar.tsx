@@ -5,10 +5,6 @@ import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-hea
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useGetFonts } from "@/features/images/api/use-get-fonts";
-import { AlertTriangle, Loader, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 
 interface TextSidebarProps {
   editor: Editor | undefined;
@@ -21,33 +17,6 @@ export const TextSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: TextSidebarProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const { data: fonts, isLoading, isError } = useGetFonts();
-
-  const filteredFonts = fonts?.filter(
-    (font: { font_name: string; font_tags: string[] }) => {
-      const searchLower = searchQuery.toLowerCase();
-      return (
-        font.font_name?.toLowerCase().includes(searchLower) ||
-        font.font_tags?.some((tag: string) =>
-          tag.toLowerCase().includes(searchLower)
-        )
-      );
-    }
-  );
-
-  const loadFontFromCloudinary = async (fontName: string, fontUrl: string) => {
-    const isAlreadyLoaded = [...document.fonts].some(
-      (fontFace) => fontFace.family === fontName
-    );
-    if (isAlreadyLoaded) return;
-
-    const fontFace = new FontFace(fontName, `url(${fontUrl})`);
-    const loadedFont = await fontFace.load();
-    document.fonts.add(loadedFont);
-  };
-
   const onClose = () => {
     onChangeActiveTool("select");
   };
@@ -62,48 +31,51 @@ export const TextSidebar = ({
       )}
     >
       <ToolSidebarHeader title="Text" description="Add text to your canvas" />
-      <div className="px-4 py-2">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search images by name or tags..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8"
-          />
-        </div>
-      </div>
-      {isLoading && (
-        <div className="flex items-center justify-center flex-1">
-          <Loader className="size-4 text-muted-foreground animate-spin" />
-        </div>
-      )}
-      {isError && (
-        <div className="flex flex-col gap-y-4 items-center justify-center flex-1">
-          <AlertTriangle className="size-4 text-muted-foreground" />
-          <p className="text-muted-foreground text-xs">Failed to fetch fonts</p>
-        </div>
-      )}
+
       <ScrollArea>
         <div className="p-4 space-y-4 border-b">
-          {filteredFonts?.map((font) => (
-            <Button
-              key={font.font_name}
-              variant="secondary"
-              size="lg"
-              className="w-full h-16 justify-start text-left"
-              onClick={async () => {
-                await loadFontFromCloudinary(font.font_name, font.font);
-                editor?.addText(font.font_name, {
-                  fontSize: 48,
-                  fontFamily: font.font_name,
-                });
-                onClose();
-              }}
-            >
-              <span className="text-4xl font-bold">{font.font_name}</span>
-            </Button>
-          ))}
+          <Button
+            className="w-full"
+            onClick={() => {
+              editor?.addText("Textbox");
+              onClose();
+            }}
+          >
+            Add a textbox
+          </Button>
+          <Button
+            className="w-full h-16"
+            variant="secondary"
+            size="lg"
+            onClick={() => {
+              editor?.addText("Heading", { fontSize: 80, fontWeight: 700 });
+              onClose();
+            }}
+          >
+            <span className="text-3xl font-bold">Add a heading</span>
+          </Button>
+          <Button
+            className="w-full h-16"
+            variant="secondary"
+            size="lg"
+            onClick={() => {
+              editor?.addText("Subheading", { fontSize: 44, fontWeight: 600 });
+              onClose();
+            }}
+          >
+            <span className="text-xl font-semibold">Add a subheading</span>
+          </Button>
+          <Button
+            className="w-full h-16"
+            variant="secondary"
+            size="lg"
+            onClick={() => {
+              editor?.addText("Paragraph", { fontSize: 32 });
+              onClose();
+            }}
+          >
+            Paragraph
+          </Button>
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

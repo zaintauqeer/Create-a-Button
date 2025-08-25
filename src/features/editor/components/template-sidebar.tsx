@@ -29,7 +29,7 @@ export const TemplateSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: TemplateSidebarProps) => {
-  const { shouldBlock, triggerPaywall } = usePaywall();
+  // const { shouldBlock, triggerPaywall } = usePaywall();
   const [searchQuery, setSearchQuery] = useState("");
 
   const [ConfirmDialog, confirm] = useConfirm(
@@ -152,6 +152,7 @@ export const TemplateSidebar = ({
                       src={template.templateThumbnail || ""}
                       alt={template.templateName || "Template"}
                       className="object-cover p-4"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left">
                       {template.templateName}

@@ -132,7 +132,7 @@ export const ImageSidebar = ({
                     editor?.addImage(image.image);
                     onClose();
                   }}
-                  key={image.id}
+                  key={image.image}
                   className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                 >
                   <Image
@@ -140,6 +140,7 @@ export const ImageSidebar = ({
                     src={image.image}
                     alt={image.image_name || "Image"}
                     className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <Link
                     target="_blank"

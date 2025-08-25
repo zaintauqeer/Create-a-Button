@@ -17,14 +17,14 @@ interface RemoveBgSidebarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
-};
+}
 
 export const RemoveBgSidebar = ({
   editor,
   activeTool,
   onChangeActiveTool,
 }: RemoveBgSidebarProps) => {
-  const { shouldBlock, triggerPaywall } = usePaywall();
+  // const { shouldBlock, triggerPaywall } = usePaywall();
   const mutation = useRemoveBg();
 
   const selectedObject = editor?.selectedObjects[0];
@@ -42,20 +42,23 @@ export const RemoveBgSidebar = ({
     //   return;
     // }
 
-    mutation.mutate({
-      image: imageSrc,
-    }, {
-      onSuccess: ({ data }) => {
-        editor?.addImage(data);
+    mutation.mutate(
+      {
+        image: imageSrc,
       },
-    });
+      {
+        onSuccess: ({ data }) => {
+          editor?.addImage(data);
+        },
+      }
+    );
   };
 
   return (
     <aside
       className={cn(
         "bg-white lg:left-[100px] absolute lg:bottom-auto bottom-20 border-r z-[80] lg:w-[360px] w-full lg:h-full h-80 flex flex-col",
-        activeTool === "remove-bg" ? "visible" : "hidden",
+        activeTool === "remove-bg" ? "visible" : "hidden"
       )}
     >
       <ToolSidebarHeader
@@ -73,16 +76,13 @@ export const RemoveBgSidebar = ({
       {imageSrc && (
         <ScrollArea>
           <div className="p-4 space-y-4">
-            <div className={cn(
-              "relative aspect-square rounded-md overflow-hidden transition bg-muted",
-              mutation.isPending && "opacity-50",
-            )}>
-              <Image
-                src={imageSrc}
-                fill
-                alt="Image"
-                className="object-cover"
-              />
+            <div
+              className={cn(
+                "relative aspect-square rounded-md overflow-hidden transition bg-muted",
+                mutation.isPending && "opacity-50"
+              )}
+            >
+              <Image src={imageSrc} fill alt="Image" className="object-cover" />
             </div>
             <Button
               disabled={mutation.isPending}

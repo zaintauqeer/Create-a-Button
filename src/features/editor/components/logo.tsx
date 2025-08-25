@@ -8,6 +8,8 @@ export const Logo = () => {
         <Image
           src="/icon.png"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority
           alt="Image AI"
           className="shrink-0 hover:opacity-75 transition"
         />

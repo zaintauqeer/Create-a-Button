@@ -1,7 +1,7 @@
 import { Context, Hono } from "hono";
 import { handle } from "hono/vercel";
 import { AuthConfig, initAuthConfig } from "@hono/auth-js";
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 import ai from "./ai";
 import users from "./users";
@@ -15,10 +15,11 @@ export const runtime = "nodejs";
 
 function getAuthConfig(c: Context): AuthConfig {
   return {
-    secret: c.env?.AUTH_SECRET || 'aGQYUWNysdPgCztss7Io7Gln0gj8gtm7Hdx9xb/vT5c=',
-    ...authConfig
+    secret:
+      c.env?.AUTH_SECRET || "aGQYUWNysdPgCztss7Io7Gln0gj8gtm7Hdx9xb/vT5c=",
+    ...authConfig,
   };
-};
+}
 
 const app = new Hono().basePath("/api");
 
@@ -33,9 +34,9 @@ const routes = app
 
 // Add this cors configuration
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*', // Or specify your exact domain
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  "Access-Control-Allow-Origin": "*", // Or specify your exact domain
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
 // Add OPTIONS handler for preflight requests

@@ -3,11 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { CreditCard, Crown, Loader, LogOut } from "lucide-react";
 
-import { 
-  Avatar, 
-  AvatarFallback, 
-  AvatarImage
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +15,7 @@ import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 import { useBilling } from "@/features/subscriptions/api/use-billing";
 
 export const UserButton = () => {
-  const { shouldBlock, triggerPaywall, isLoading } = usePaywall();
+  // const { shouldBlock, triggerPaywall, isLoading } = usePaywall();
   const mutation = useBilling();
   const session = useSession();
 
@@ -33,7 +29,7 @@ export const UserButton = () => {
   };
 
   if (session.status === "loading") {
-    return <Loader className="size-4 animate-spin text-muted-foreground" />
+    return <Loader className="size-4 animate-spin text-muted-foreground" />;
   }
 
   if (session.status === "unauthenticated" || !session.data) {

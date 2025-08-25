@@ -1,11 +1,6 @@
 "use client";
 
-import { 
-  CreditCard, 
-  Crown, 
-  Home, 
-  MessageCircleQuestion
-} from "lucide-react";
+import { CreditCard, Crown, Home, MessageCircleQuestion } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
@@ -20,17 +15,16 @@ import { SidebarItem } from "./sidebar-item";
 export const SidebarRoutes = () => {
   const mutation = useCheckout();
   const billingMutation = useBilling();
-  const { shouldBlock, isLoading, triggerPaywall } = usePaywall();
+  // const { shouldBlock, isLoading, triggerPaywall } = usePaywall();
 
   const pathname = usePathname();
 
   const onClick = () => {
-    if (shouldBlock) {
-      triggerPaywall();
-      return;
-    }
-
-    billingMutation.mutate();
+    // if (shouldBlock) {
+    //   triggerPaywall();
+    //   return;
+    // }
+    // billingMutation.mutate();
   };
 
   return (

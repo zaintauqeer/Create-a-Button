@@ -5,19 +5,22 @@ import { Loader, TriangleAlert } from "lucide-react";
 
 import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
-import { ResponseType, useGetTemplates } from "@/features/projects/api/use-get-templates";
+import {
+  ResponseType,
+  useGetTemplates,
+} from "@/features/projects/api/use-get-templates";
 import { useCreateProject } from "@/features/projects/api/use-create-project";
 
 import { TemplateCard } from "./template-card";
 
 export const TemplatesSection = () => {
-  const { shouldBlock, triggerPaywall } = usePaywall();
+  // const { shouldBlock, triggerPaywall } = usePaywall();
   const router = useRouter();
   const mutation = useCreateProject();
 
-  // const { 
-  //   data, 
-  //   isLoading, 
+  // const {
+  //   data,
+  //   isLoading,
   //   isError
   // } = useGetTemplates({ page: "1", limit: "4" });
 
@@ -79,9 +82,7 @@ export const TemplatesSection = () => {
 
   return (
     <div>
-      <h3 className="font-semibold text-lg">
-        Start from a template
-      </h3>
+      <h3 className="font-semibold text-lg">Start from a template</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 mt-4 gap-4">
         {/* {data?.map((template) => (
           <TemplateCard
