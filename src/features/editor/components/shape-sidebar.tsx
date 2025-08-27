@@ -93,13 +93,23 @@ export const ShapeSidebar = ({
                     objects,
                     options
                   );
-                  svgObject.set({
-                    left: 100,
-                    top: 100,
-                    scaleX: 0.5,
-                    scaleY: 0.5,
-                  });
+                  const desiredWidth = 100; // your desired width
+                  const desiredHeight = 100; // your desired height
 
+                  // Get original dimensions
+                  const originalWidth = svgObject.width || 1;
+                  const originalHeight = svgObject.height || 1;
+
+                  // Calculate scale factors
+                  const scaleX = desiredWidth / originalWidth;
+                  const scaleY = desiredHeight / originalHeight;
+
+                  svgObject.set({
+                    left: 600,
+                    top: 200,
+                    scaleX,
+                    scaleY,
+                  });
                   editor.canvas.add(svgObject);
                   editor.canvas.setActiveObject(svgObject);
                   editor.canvas.renderAll();

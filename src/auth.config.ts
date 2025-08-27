@@ -68,13 +68,16 @@ export default {
         const { email, password } = validatedFields.data;
 
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/login`, {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password })
-          });
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}api/user/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            }
+          );
 
           if (!response.ok) {
             console.error(`HTTP error! status: ${response.status}`);
@@ -86,11 +89,11 @@ export default {
           if (result.message === "Successfully logged in") {
             return result?.data.user;
           } else {
-            console.error('Login failed:', result.message);
+            console.error("Login failed:", result.message);
             return null;
           }
         } catch (error) {
-          console.error('Fetch error:', error);
+          console.error("Fetch error:", error);
           return null;
         }
         // const query = await db
@@ -112,14 +115,13 @@ export default {
         // if (!passwordsMatch) {
         //   return null;
         // }
-
       },
-    }), 
+    }),
     // Google
   ],
   pages: {
     signIn: "/sign-in",
-    error: "/sign-in"
+    error: "/sign-in",
   },
   session: {
     strategy: "jwt",
@@ -134,10 +136,10 @@ export default {
     },
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id;  
+        token.id = user.id;
       }
 
       return token;
-    }
+    },
   },
-} satisfies NextAuthConfig
+} satisfies NextAuthConfig;

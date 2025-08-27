@@ -26,14 +26,44 @@ export const SignInCard = () => {
   const params = useSearchParams();
   const error = params.get("error");
 
-  const onCredentialSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+  const onCredentialSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    signIn("credentials", {
-      email: email,
-      password: password,
-      callbackUrl: "/",
-    });
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/admin/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`HTTP error! status: ${response.status}`);
+        return null;
+      }
+
+      const result = await response.json();
+
+      if (result.role === "Admin" || result.role === "User") {
+        return localStorage.setItem("token", JSON.stringify(result.token));
+      } else {
+        console.error("Login failed:", result.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return null;
+    }
+
+    // signIn("credentials", {
+    //   email: email,
+    //   password: password,
+    //   callbackUrl: "/",
+    // });
   };
 
   const onProviderSignIn = (provider: "github" | "google") => {

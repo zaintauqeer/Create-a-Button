@@ -31,50 +31,52 @@ export const SignUpCard = () => {
     signIn(provider, { callbackUrl: "/" });
   };
 
-  const onCredentialSignUp = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const onCredentialSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const Data = {
         name,
         email,
-        password
-      }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/signup`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(Data)
-      })
+        password,
+      };
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/user/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(Data),
+        }
+      );
       const result = await response.json();
-      console.log(result)
+      console.log(result);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    mutation.mutate({
-      name,
-      email,
-      password
-    }, {
-      onSuccess: () => {
-        signIn("credentials", {
-          email,
-          password,
-          callbackUrl: "/",
-        });
+    mutation.mutate(
+      {
+        name,
+        email,
+        password,
       },
-    })
+      {
+        onSuccess: () => {
+          signIn("credentials", {
+            email,
+            password,
+            callbackUrl: "/",
+          });
+        },
+      }
+    );
   };
 
   return (
     <Card className="w-full h-full p-8">
       <CardHeader className="px-0 pt-0">
-        <CardTitle>
-          Create an account
-        </CardTitle>
+        <CardTitle>Create an account</CardTitle>
         <CardDescription>
           Use your email or another service to continue
         </CardDescription>
@@ -146,7 +148,10 @@ export const SignUpCard = () => {
           </Button> */}
         </div>
         <p className="text-xs text-muted-foreground">
-          Already have an account? <Link href="/sign-in"><span className="text-sky-700 hover:underline">Sign in</span></Link>
+          Already have an account?{" "}
+          <Link href="/sign-in">
+            <span className="text-sky-700 hover:underline">Sign in</span>
+          </Link>
         </p>
       </CardContent>
     </Card>

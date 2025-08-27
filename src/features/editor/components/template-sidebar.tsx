@@ -30,14 +30,13 @@ export const TemplateSidebar = ({
   onChangeActiveTool,
 }: TemplateSidebarProps) => {
   // const { shouldBlock, triggerPaywall } = usePaywall();
+  const { data, isLoading, isError } = useGetTemplates();
   const [searchQuery, setSearchQuery] = useState("");
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
     "You are about to replace the current project with this template."
   );
-
-  const { data, isLoading, isError } = useGetTemplates();
 
   const filteredTemplates = data?.filter(
     (template: { templateName: string; templateTags: string[] }) => {
