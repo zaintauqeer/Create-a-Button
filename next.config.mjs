@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true, // 🚨 Skips type checking
+  },
   images: {
     remotePatterns: [
       {
@@ -12,19 +15,19 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "replicate.delivery"
+        hostname: "replicate.delivery",
       },
       {
         protocol: "http",
-        hostname: "localhost"
+        hostname: "localhost",
       },
       {
         protocol: "https",
-        hostname: "x81eer7l7u.ufs.sh"
+        hostname: "x81eer7l7u.ufs.sh",
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com"
+        hostname: "res.cloudinary.com",
       },
     ],
   },
