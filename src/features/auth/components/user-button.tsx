@@ -16,16 +16,15 @@ import { useBilling } from "@/features/subscriptions/api/use-billing";
 
 export const UserButton = () => {
   // const { shouldBlock, triggerPaywall, isLoading } = usePaywall();
-  const mutation = useBilling();
+  // const mutation = useBilling();
   const session = useSession();
 
   const onClick = () => {
-    if (shouldBlock) {
-      triggerPaywall();
-      return;
-    }
-
-    mutation.mutate();
+    // if (shouldBlock) {
+    //   triggerPaywall();
+    //   return;
+    // }
+    // mutation.mutate();
   };
 
   if (session.status === "loading") {

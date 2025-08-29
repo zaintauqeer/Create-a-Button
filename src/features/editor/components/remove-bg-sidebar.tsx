@@ -41,17 +41,16 @@ export const RemoveBgSidebar = ({
     //   triggerPaywall();
     //   return;
     // }
-
-    mutation.mutate(
-      {
-        image: imageSrc,
-      },
-      {
-        onSuccess: ({ data }) => {
-          editor?.addImage(data);
-        },
-      }
-    );
+    // mutation.mutate(
+    //   {
+    //     image: imageSrc,
+    //   },
+    //   {
+    //     onSuccess: ({ data }) => {
+    //       editor?.addImage(data);
+    //     },
+    //   }
+    // );
   };
 
   return (

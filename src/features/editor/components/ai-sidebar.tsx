@@ -32,19 +32,19 @@ export const AiSidebar = ({
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (shouldBlock) {
-      triggerPaywall();
-      return;
-    }
+    // if (shouldBlock) {
+    //   triggerPaywall();
+    //   return;
+    // }
 
-    mutation.mutate(
-      { prompt: value },
-      {
-        onSuccess: ({ data }) => {
-          editor?.addImage(data);
-        },
-      }
-    );
+    // mutation.mutate(
+    //   { prompt: value },
+    //   {
+    //     onSuccess: ({ data }) => {
+    //       editor?.addImage(data);
+    //     },
+    //   }
+    // );
   };
 
   const onClose = () => {
